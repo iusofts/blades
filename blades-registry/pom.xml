@@ -11,5 +11,13 @@
 
     <artifactId>blades-registry</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.iusofts.blades</groupId>
+            <artifactId>blades-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 
 </project>
