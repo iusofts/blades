@@ -1,14 +1,14 @@
 package com.iusofts.blades.common.domain;
 
 
-import com.iusofts.blades.common.api.ApiUtil;
+import com.alibaba.fastjson.JSON;
 import com.iusofts.blades.common.excption.ServiceNotAuthException;
 import com.iusofts.blades.common.excption.ServiceNotAvailableException;
 import com.iusofts.blades.common.excption.ServiceNotFoundException;
-import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Type;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -20,47 +20,45 @@ public class AsyncFuture<T> {
     private Future<T> future;
     private int waitingTime;
     private String serviceName;
+    private Type clazz;
 
-    public AsyncFuture(Future<T> future, String serviceName, int waitingTime) {
+    public AsyncFuture(Future<T> future, Type clazz, String serviceName, int waitingTime) {
         this.future = future;
         this.waitingTime = waitingTime;
         this.serviceName = serviceName;
+        this.clazz = clazz;
     }
 
-    public T get() throws ServiceNotAvailableException {
+    public <T> T get() throws ServiceNotAvailableException {
         return this.get(waitingTime);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes", "hiding" })
-	public <T> T get(TypeReference typeReference) throws ServiceNotAvailableException {
-    	return (T) ApiUtil.mapper(this.get(waitingTime), typeReference);
-    }
-
-    public T get(int timeOut) throws ServiceNotAvailableException,ServiceNotFoundException {
+    public <T> T get(int timeOut) throws ServiceNotAvailableException, ServiceNotFoundException {
         T t = null;
         try {
-            t = future.get(timeOut, TimeUnit.SECONDS);
+            Object object = future.get(timeOut, TimeUnit.SECONDS);
+            t = JSON.parseObject(JSON.toJSONString(object), clazz);
         } catch (Exception e) {
             if (e instanceof ExecutionException) {
                 if (e.getCause() instanceof ServiceNotAvailableException) {
-                    logger.info("call service {} exception {}",this.serviceName,e.getCause());
+                    logger.info("call service {} exception {}", this.serviceName, e.getCause());
                     throw (ServiceNotAvailableException) e.getCause();
                 } else if (e.getCause() instanceof ServiceNotFoundException) {
-                    logger.info("call service {} exception {}",this.serviceName,e.getCause());
+                    logger.info("call service {} exception {}", this.serviceName, e.getCause());
                     throw (ServiceNotFoundException) e.getCause();
                 } else if (e.getCause() instanceof ServiceNotAuthException) {
-                    logger.info("call service {} exception {}",this.serviceName,e.getCause());
+                    logger.info("call service {} exception {}", this.serviceName, e.getCause());
                     throw (ServiceNotAuthException) e.getCause();
                 } else {
-                    logger.error("call service {} failed with exception {} ",this.serviceName,e);
+                    logger.error("call service {} failed with exception {} ", this.serviceName, e);
                     throw new ServiceNotAvailableException(serviceName);
                 }
             } else {
-                logger.error("call service {} failed with exception {} ",this.serviceName,e);
+                logger.error("call service {} failed with exception {} ", this.serviceName, e);
                 throw new ServiceNotAvailableException(serviceName);
             }
         }
-        logger.info("call service [{}] success return [{}]",serviceName,t);
+        logger.info("call service [{}] success return [{}]", serviceName, t);
         return t;
     }
 }

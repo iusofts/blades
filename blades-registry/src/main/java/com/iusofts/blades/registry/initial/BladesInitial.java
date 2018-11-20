@@ -4,11 +4,12 @@ import java.lang.reflect.Method;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.iusofts.blades.common.annotation.BladesService;
+import com.iusofts.blades.common.util.IPUtil;
 import com.iusofts.blades.registry.IRegister;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -34,11 +35,21 @@ public class BladesInitial implements ApplicationContextAware, InitializingBean 
     private IRegister register;
     public static String group;
     private String hostName;
+    private List<Class> excludeClasses;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         bladesServices.putAll(applicationContext.getBeansWithAnnotation(Controller.class));
         bladesServices.putAll(applicationContext.getBeansWithAnnotation(RestController.class));
+        // exclude
+        if (CollectionUtils.isNotEmpty(excludeClasses)) {
+            for (Iterator<Map.Entry<String, Object>> it = bladesServices.entrySet().iterator(); it.hasNext(); ) {
+                Map.Entry<String, Object> item = it.next();
+                if (excludeClasses.contains(item.getValue().getClass())) {
+                    it.remove();
+                }
+            }
+        }
         logger.info("blades service initialing , find all blades service {}", bladesServices);
     }
 
@@ -91,24 +102,18 @@ public class BladesInitial implements ApplicationContextAware, InitializingBean 
         if (StringUtils.isNotEmpty(this.ip) && StringUtils.isNotEmpty(this.hostName)) {
             return new String[]{ip, hostName};
         }
+
         String localIP = "127.0.0.1";
         String localHostName = "local";
-        DatagramSocket sock = null;
 
         try {
-            InetSocketAddress e = new InetSocketAddress(InetAddress.getByName("1.2.3.4"), 1);
-            sock = new DatagramSocket();
-            sock.connect(e);
-            localIP = sock.getLocalAddress().getHostAddress();
-            localHostName = sock.getLocalAddress().getHostName();
-            this.ip = localIP;
-            this.hostName = localHostName;
+            InetAddress address = IPUtil.getLocalHostLANAddress();
+            if (address != null) {
+                localIP = address.getHostAddress();
+                localHostName = address.getHostName();
+            }
         } catch (Exception e) {
-            logger.error("get local ip error", e);
-        } finally {
-            sock.disconnect();
-            sock.close();
-            sock = null;
+            logger.error("getLocalHost failed", e);
         }
 
         return new String[]{localIP, localHostName};
@@ -159,4 +164,19 @@ public class BladesInitial implements ApplicationContextAware, InitializingBean 
     public void setGroup(String group) {
         BladesInitial.group = group;
     }
+
+    public void addExcludeClass(Class... excludeClass) {
+        List<Class> classList = new ArrayList<>();
+        if (excludeClass != null && excludeClass.length > 0) {
+            for (Class aClass : excludeClass) {
+                classList.add(aClass);
+            }
+        }
+        if (this.excludeClasses != null) {
+            this.excludeClasses.addAll(classList);
+        } else {
+            this.excludeClasses = classList;
+        }
+    }
+
 }

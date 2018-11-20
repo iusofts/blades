@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.Type;
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -29,7 +30,7 @@ public class Invoker implements ServiceCaller {
     private ServiceFinder serviceFinder;
 
     // Timeout value in milliseconds for a command
-    private int defaultTimeOut ;
+    private int defaultTimeOut;
 
     // waiting timeout
     private int waitingTimeOut;
@@ -38,122 +39,122 @@ public class Invoker implements ServiceCaller {
 
     private EventPublisher eventPublisher;
 
-    private <T> AsyncFuture<T> execute(String serviceName, String url, Object param, Class<T> clazz, T fallBack, RequestMethod method, Integer timeOut ) throws ServiceNotFoundException,ServiceNotAvailableException {
+    private <T> AsyncFuture<T> execute(String serviceName, String url, Object param, Type clazz, T fallBack, RequestMethod method, Integer timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
         String serviceGroup = serviceName.split("\\.")[0];
-        String canAccessGroups = ConfigUtil.getString(serviceGroup+".authorization","");
+        String canAccessGroups = ConfigUtil.getString(serviceGroup + ".authorization", "");
         // 如果没有canAccessGroups，则不做限制
         if (!StringUtils.isEmpty(canAccessGroups)) {
             Set<String> canAccessSet = Sets.newHashSet(canAccessGroups.split(","));
             // 不允许访问
-            if ( !canAccessSet.contains(BladesInitial.group)) {
+            if (!canAccessSet.contains(BladesInitial.group)) {
                 throw new ServiceNotAuthException(serviceName, BladesInitial.group);
             }
         }
-        HystrixCommonCommand commonCommand = new HystrixCommonCommand(serviceName, url, serviceFinder, eventPublisher, method, param, clazz,timeOut,restTemplate);
+        HystrixCommonCommand commonCommand = new HystrixCommonCommand(serviceName, url, serviceFinder, eventPublisher, method, param, Object.class, timeOut, restTemplate);
         commonCommand.setFallBack(fallBack);
         Future future = commonCommand.queue();
 
-        return new AsyncFuture(future,serviceName,waitingTimeOut);
+        return new AsyncFuture(future, clazz, serviceName, waitingTimeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> getFuture(String serviceName, Object param, Class<T> clazz, T fallBack, int timeOut) throws ServiceNotFoundException,ServiceNotAvailableException {
-        return this.execute(serviceName,null,param,clazz,fallBack, RequestMethod.GET,timeOut);
+    public <T> AsyncFuture<T> getFuture(String serviceName, Object param, Type clazz, T fallBack, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return this.execute(serviceName, null, param, clazz, fallBack, RequestMethod.GET, timeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> getFuture(String serviceName, Object param, Class<T> clazz, int timeOut) throws ServiceNotFoundException,ServiceNotAvailableException {
-        return this.getFuture(serviceName,param,clazz,null,timeOut);
+    public <T> AsyncFuture<T> getFuture(String serviceName, Object param, Type clazz, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return this.getFuture(serviceName, param, clazz, null, timeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> getFuture(String serviceName, Object param, Class<T> clazz, T fallBack) throws ServiceNotFoundException,ServiceNotAvailableException {
-        return this.getFuture(serviceName,param,clazz,fallBack,defaultTimeOut);
+    public <T> AsyncFuture<T> getFuture(String serviceName, Object param, Type clazz, T fallBack) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return this.getFuture(serviceName, param, clazz, fallBack, defaultTimeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> getFuture(String serviceName, Object param, Class<T> clazz) throws ServiceNotFoundException,ServiceNotAvailableException {
-        return this.getFuture(serviceName, param, clazz,null);
+    public <T> AsyncFuture<T> getFuture(String serviceName, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return this.getFuture(serviceName, param, clazz, null);
     }
 
     @Override
-    public <T> AsyncFuture<T> postFuture(String serviceName, Object param, Class<T> clazz, T fallBack, int timeOut) throws ServiceNotFoundException,ServiceNotAvailableException {
-        return this.execute(serviceName,null,param,clazz,fallBack, RequestMethod.POST,timeOut);
+    public <T> AsyncFuture<T> postFuture(String serviceName, Object param, Type clazz, T fallBack, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return this.execute(serviceName, null, param, clazz, fallBack, RequestMethod.POST, timeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> postFuture(String serviceName, Object param, Class<T> clazz, T fallBack) throws ServiceNotFoundException,ServiceNotAvailableException {
-        return this.postFuture(serviceName,param,clazz,fallBack,defaultTimeOut);
+    public <T> AsyncFuture<T> postFuture(String serviceName, Object param, Type clazz, T fallBack) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return this.postFuture(serviceName, param, clazz, fallBack, defaultTimeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> postFuture(String serviceName, Object param, Class<T> clazz, int timeOut) throws ServiceNotFoundException,ServiceNotAvailableException {
-        return this.postFuture(serviceName,param,clazz,null,timeOut);
+    public <T> AsyncFuture<T> postFuture(String serviceName, Object param, Type clazz, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return this.postFuture(serviceName, param, clazz, null, timeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> postFuture(String serviceName, Object param, Class<T> clazz) throws ServiceNotFoundException,ServiceNotAvailableException {
-        return this.postFuture(serviceName,param,clazz,null);
+    public <T> AsyncFuture<T> postFuture(String serviceName, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return this.postFuture(serviceName, param, clazz, null);
     }
 
     @Override
-    public <T> AsyncFuture<T> postFuture(String serviceName, String url, Object param, Class<T> clazz, T fallBack, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
-        return this.execute(serviceName,url,param,clazz,fallBack, RequestMethod.POST,timeOut);
+    public <T> AsyncFuture<T> postFuture(String serviceName, String url, Object param, Type clazz, T fallBack, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return this.execute(serviceName, url, param, clazz, fallBack, RequestMethod.POST, timeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> getFuture(String serviceName, String url, Object param, Class<T> clazz, T fallBack, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
-        return this.execute(serviceName,url,param,clazz,fallBack, RequestMethod.GET,timeOut);
+    public <T> AsyncFuture<T> getFuture(String serviceName, String url, Object param, Type clazz, T fallBack, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return this.execute(serviceName, url, param, clazz, fallBack, RequestMethod.GET, timeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> postFuture(String serviceName, String url, Object param, Class<T> clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
-        return postFuture(serviceName,url,param,clazz,null,defaultTimeOut);
+    public <T> AsyncFuture<T> postFuture(String serviceName, String url, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return postFuture(serviceName, url, param, clazz, null, defaultTimeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> postFuture(String serviceName, String url, Object param, Class<T> clazz, T fallBack) throws ServiceNotFoundException, ServiceNotAvailableException {
-        return postFuture(serviceName,url,param,clazz,fallBack,defaultTimeOut);
+    public <T> AsyncFuture<T> postFuture(String serviceName, String url, Object param, Type clazz, T fallBack) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return postFuture(serviceName, url, param, clazz, fallBack, defaultTimeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> postFuture(String serviceName, String url, Object param, Class<T> clazz, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
-        return postFuture(serviceName,url,param,clazz,null,timeOut);
+    public <T> AsyncFuture<T> postFuture(String serviceName, String url, Object param, Type clazz, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return postFuture(serviceName, url, param, clazz, null, timeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> getFuture(String serviceName, String url, Object param, Class<T> clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
-        return getFuture(serviceName,url,param,clazz,null,defaultTimeOut);
+    public <T> AsyncFuture<T> getFuture(String serviceName, String url, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return getFuture(serviceName, url, param, clazz, null, defaultTimeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> getFuture(String serviceName, String url, Object param, Class<T> clazz, T fallBack) throws ServiceNotFoundException, ServiceNotAvailableException {
-        return getFuture(serviceName,url,param,clazz,fallBack,defaultTimeOut);
+    public <T> AsyncFuture<T> getFuture(String serviceName, String url, Object param, Type clazz, T fallBack) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return getFuture(serviceName, url, param, clazz, fallBack, defaultTimeOut);
     }
 
     @Override
-    public <T> AsyncFuture<T> getFuture(String serviceName, String url, Object param, Class<T> clazz, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
-        return getFuture(serviceName,url,param,clazz,null,timeOut);
+    public <T> AsyncFuture<T> getFuture(String serviceName, String url, Object param, Type clazz, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return getFuture(serviceName, url, param, clazz, null, timeOut);
     }
 
     @Override
-    public <T> T get(String serviceName, String url, Object param, Class<T> clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
-        return getFuture(serviceName,url,param,clazz).get();
+    public <T> T get(String serviceName, String url, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return getFuture(serviceName, url, param, clazz).get();
     }
 
     @Override
-    public <T> T post(String serviceName, String url, Object param, Class<T> clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
-        return postFuture(serviceName,url,param,clazz).get();
+    public <T> T post(String serviceName, String url, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return postFuture(serviceName, url, param, clazz).get();
     }
 
     @Override
-    public <T> T get(String serviceName, Object param, Class<T> clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
-        return getFuture(serviceName,param,clazz).get();
+    public <T> T get(String serviceName, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return getFuture(serviceName, param, clazz).get();
     }
 
     @Override
-    public <T> T post(String serviceName, Object param, Class<T> clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
-        return postFuture(serviceName,param,clazz).get();
+    public <T> T post(String serviceName, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException {
+        return postFuture(serviceName, param, clazz).get();
     }
 
     public void setServiceFinder(ServiceFinder serviceFinder) {
@@ -176,12 +177,12 @@ public class Invoker implements ServiceCaller {
         this.eventPublisher = eventPublisher;
     }
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	public <T> T post(String serviceName, Object param, TypeReference typeReference) throws ServiceNotFoundException,
-			ServiceNotAvailableException {
-		Object obj = postFuture(serviceName,param,Object.class).get();
-		return (T) ApiUtil.mapper(obj,typeReference);
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public <T> T post(String serviceName, Object param, TypeReference typeReference) throws ServiceNotFoundException,
+            ServiceNotAvailableException {
+        Object obj = postFuture(serviceName, param, Object.class).get();
+        return (T) ApiUtil.mapper(obj, typeReference);
+    }
 
 }

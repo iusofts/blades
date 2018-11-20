@@ -23,13 +23,14 @@ public class RestTemplateUtils {
 
     /**
      * HTTP POST
-     * @param restTemplate  restTemplate
-     * @param path  请求路径
-     * @param request  请求消息体
+     *
+     * @param restTemplate restTemplate
+     * @param path         请求路径
+     * @param request      请求消息体
      * @param responseType 响应类型
-     * @param <T>  响应类型
+     * @param <T>          响应类型
      * @param extraHeaders 额外的请求头
-     * @return  响应结果
+     * @return 响应结果
      * @throws Exception
      */
     public static <T> T post(RestTemplate restTemplate, String path, Object request, Class<T> responseType, Map<String, String> extraHeaders) throws Exception {
@@ -49,12 +50,13 @@ public class RestTemplateUtils {
 
     /**
      * HTTP POST
-     * @param restTemplate  restTemplate
-     * @param path  请求路径
-     * @param request  请求消息体
+     *
+     * @param restTemplate restTemplate
+     * @param path         请求路径
+     * @param request      请求消息体
      * @param responseType 响应类型
-     * @param <T>  响应类型
-     * @return  响应结果
+     * @param <T>          响应类型
+     * @return 响应结果
      * @throws Exception
      */
     public static <T> T post(RestTemplate restTemplate, String path, Object request, Class<T> responseType) throws Exception {
@@ -64,13 +66,14 @@ public class RestTemplateUtils {
 
     /**
      * HTTP GET
-     * @param restTemplate  restTemplate
-     * @param path  请求路径
-     * @param request 请求体，object，如果是个map，会自动转化为url参数
+     *
+     * @param restTemplate restTemplate
+     * @param path         请求路径
+     * @param request      请求体，object，如果是个map，会自动转化为url参数
      * @param responseType 响应类型
-     * @param <T> 响应类型
+     * @param <T>          响应类型
      * @param extraHeaders 额外的请求头
-     * @return  结果
+     * @return 结果
      * @throws Exception
      */
     public static <T> T get(RestTemplate restTemplate, String path, Object request, Class<T> responseType, Map<String, String> extraHeaders) throws Exception {
@@ -82,8 +85,8 @@ public class RestTemplateUtils {
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
         //添加额外的请求头
-        if(MapUtils.isNotEmpty(extraHeaders)){
-            for(Map.Entry<String,String> entry: extraHeaders.entrySet()){
+        if (MapUtils.isNotEmpty(extraHeaders)) {
+            for (Map.Entry<String, String> entry : extraHeaders.entrySet()) {
                 headers.set(entry.getKey(), entry.getValue());
             }
         }
@@ -117,29 +120,30 @@ public class RestTemplateUtils {
 
     /**
      * HTTP GET
-     * @param restTemplate  restTemplate
-     * @param path  请求路径
-     * @param request 请求体，object，如果是个map，会自动转化为url参数
+     *
+     * @param restTemplate restTemplate
+     * @param path         请求路径
+     * @param request      请求体，object，如果是个map，会自动转化为url参数
      * @param responseType 响应类型
-     * @param <T> 响应类型
-     * @return  结果
+     * @param <T>          响应类型
+     * @return 结果
      * @throws Exception
      */
     public static <T> T get(RestTemplate restTemplate, String path, Object request, Class<T> responseType) throws Exception {
-        return get(restTemplate,path,request,responseType,null);
+        return get(restTemplate, path, request, responseType, null);
     }
 
 
-    private final static MultiValueMap<String, String>  convert(Map<String,String> extraHeaders){
+    private final static MultiValueMap<String, String> convert(Map<String, String> extraHeaders) {
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap();
 
-        if(MapUtils.isNotEmpty(extraHeaders)){
-            for(Map.Entry<String,String> entry: extraHeaders.entrySet()){
+        if (MapUtils.isNotEmpty(extraHeaders)) {
+            for (Map.Entry<String, String> entry : extraHeaders.entrySet()) {
                 headers.add(entry.getKey(), entry.getValue());
             }
         }
 
-        return  headers;
+        return headers;
     }
 }

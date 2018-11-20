@@ -7,10 +7,6 @@ import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Administrator
- *
- */
 public class HttpUtil {
 
 	/**

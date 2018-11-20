@@ -38,18 +38,19 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(serviceName.split("\\.")[0]))
                 .andCommandKey(HystrixCommandKey.Factory.asKey(serviceName))
                 .andCommandPropertiesDefaults(HystrixCommandProperties.Setter().withExecutionTimeoutInMilliseconds(timeOut)));
-        this.serviceName=serviceName;
+        this.serviceName = serviceName;
         this.urlPath = urlPath;
-        this.serviceFinder=serviceFinder;
-        this.methodType=methodType;
-        this.param=param;
-        this.responseType=responseType;
-        this.restTemplate=restTemplate;
+        this.serviceFinder = serviceFinder;
+        this.methodType = methodType;
+        this.param = param;
+        this.responseType = responseType;
+        this.restTemplate = restTemplate;
         this.eventPublisher = eventPublisher;
     }
 
     /**
      * 重写run方法，实现熔断器保护下的接口调用
+     *
      * @return
      * @throws Exception
      */
@@ -90,11 +91,11 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
     private void publishAccessFailedEvent() {
         if (null == eventPublisher) {
             // 未配置
-            return ;
+            return;
         }
         try {
             // 调用失败的不统计调用耗时
-            BladesAccessEvent bladesAccessEvent = new BladesAccessEvent("bladesAccess", BladesInitial.group, 0, serviceName,"success");
+            BladesAccessEvent bladesAccessEvent = new BladesAccessEvent("bladesAccess", BladesInitial.group, 0, serviceName, "success");
             eventPublisher.publish(bladesAccessEvent);
         } catch (Exception e) {
             // never throw exception
@@ -106,10 +107,10 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
     private void publishAccessSuccessEvent(long costTime) {
         if (null == eventPublisher) {
             // 未配置
-            return ;
+            return;
         }
         try {
-            BladesAccessEvent bladesAccessEvent = new BladesAccessEvent("bladesAccess", BladesInitial.group, costTime, serviceName,"failed");
+            BladesAccessEvent bladesAccessEvent = new BladesAccessEvent("bladesAccess", BladesInitial.group, costTime, serviceName, "failed");
             eventPublisher.publish(bladesAccessEvent);
         } catch (Exception e) {
             // never throw exception
@@ -118,15 +119,15 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
     }
 
     private String buildUrl(ServiceInstanceDetail detail) {
-        return "http://"+detail.getLocalIp()+":"+detail.getLocalPort()+detail.getClassPath()+detail.getMethodPath();
+        return "http://" + detail.getLocalIp() + ":" + detail.getLocalPort() + detail.getClassPath() + detail.getMethodPath();
     }
 
     // 使用RestTemplate进行http调用
     private T httpCall(String url) throws Exception {
         if (methodType.equals(RequestMethod.GET)) {
-            return RestTemplateUtils.get(this.restTemplate,url,param,responseType);
+            return RestTemplateUtils.get(this.restTemplate, url, param, responseType);
         } else {
-            return RestTemplateUtils.post(this.restTemplate,url,param,responseType);
+            return RestTemplateUtils.post(this.restTemplate, url, param, responseType);
         }
     }
 
@@ -136,17 +137,17 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
 
     /**
      * 降级，接口调用失败会执行fallback
+     *
      * @return
      */
     protected T getFallback() {
-        logger.info("execute service {} failed ,do fallback",serviceName);
+        logger.info("execute service {} failed ,do fallback", serviceName);
         if (null != fallBack) {
             // 执行fallback
             fallBack = doFallBack();
             return fallBack;
-        }
-        else {
-            throw new UnsupportedOperationException("No fallback available."+serviceName);
+        } else {
+            throw new UnsupportedOperationException("No fallback available." + serviceName);
         }
     }
 
