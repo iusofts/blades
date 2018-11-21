@@ -1,0 +1,147 @@
+﻿@charset "utf-8";
+/* CSS Document */
+.page
+{
+	margin-top: 10px;
+}
+.page ul
+{
+	margin: 0px;
+	padding: 0px;
+	float: right;
+	height: 30px;
+	font-size: 14px;
+}
+.page ul li
+{
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	float: left;
+	color: #888888;
+}
+.page ul li a
+{
+	text-decoration: none;
+	color: #333;
+	border: 1px #CCC solid;
+	display:inline-block;
+	width: 35px;
+	text-align: center;
+	line-height: 30px;
+	border-left: 0px;
+}
+.page .last
+{
+	width: 70px;
+	border: 1px #CCC solid;
+}
+.page .next
+{
+	width: 70px;
+}
+.page .controls
+{
+	border: 0px;
+	padding-left: 10px;
+	line-height: 30px;
+	font-size: 14px;
+}
+.page .controls input
+{
+	border: 1px #CCC solid;
+	width: 28px;
+	text-align: center;
+	height: 20px;
+	margin-left: 3px;
+	margin-right: 3px;
+	color: #999;
+}
+.page .button
+{
+	border: 1px #ccc solid;
+	height: 20px;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-left: 5px;
+	color: #666;
+	cursor: pointer;
+	display: inline;
+}
+.disabled
+{
+	background-color: #CCC;
+	cursor: default;
+	display: none;
+}
+.disabled a:hover
+{
+	border: 1px #ccc solid;
+	margin-left: -1px;
+}
+.input_validation_error
+{
+	border: 1px red solid;
+}
+.page_left
+{
+	float: left;
+	padding-left: 10px;
+}
+
+.orange ul li a:hover
+{
+	color: #ff8040;
+	border: 1px #ff8040 solid;
+	margin-left: -1px;
+}
+.orange .active a
+{
+	color: white;
+	font-weight:bold;
+	background-color: #ff8040;
+}
+.orange .active a:hover
+{
+	color: white;
+	font-weight:bold;
+	background-color: #ff8040;
+}
+.orange .num
+{
+	color: #ff8040;
+	font-style: normal;
+	font-family: '微软雅黑';
+}
+
+.blue ul li a:hover
+{
+	color: rgba(64, 151, 201, 1);
+	border: 1px rgba(64, 151, 201, 1) solid;
+	margin-left: -1px;
+}
+.blue .active a
+{
+	color: white;
+	font-weight:bold;
+	background-color: rgba(64, 151, 201, 1);
+}
+.blue .active a:hover
+{
+	color: white;
+	font-weight:bold;
+	background-color: rgba(64, 151, 201, 1);
+}
+.blue .num
+{
+	color: rgba(64, 151, 201, 1);
+	font-style: normal;
+	font-family: '微软雅黑';
+}
+
+.seachform li
+{
+	padding: 5px;
+}

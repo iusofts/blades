@@ -1,4 +1,4 @@
-# The @activeProfile@ will be filtered by gradle build parameter: gradle clean war -Pprofiles=production
+# The @activeProfile@ will be filtered by gradle build parameter: gradle clean war -Pprofiles: production
 # You must add the 'clean' build command, if you don't edit this yml file. Otherwise, the profiles change
 # will not work. If no profiles specified, the 'default' will be used.
 #GLOBAL
@@ -21,7 +21,18 @@ server:
 ###########default相关配置信息在上面系统默认配置中配置##############
 spring:
   profiles: default
-
+  freemarker:
+    allow-request-override: false
+    cache: true
+    check-template-location: true
+    charset: UTF-8
+    content-type: text/html
+    expose-request-attributes: true
+    expose-session-attributes: false
+    expose-spring-macro-helpers: false
+    request-context-attribute: rc
+    suffix: .ftl
+    template-loader-path: classpath:/views/
 ---
 
 spring:

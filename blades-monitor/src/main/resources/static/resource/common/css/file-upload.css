@@ -1,0 +1,95 @@
+﻿@charset "utf-8";
+/* CSS Document */
+.img-upload
+{
+	width: 150px;
+	height:auto;
+	float: left;
+	margin-right: 10px;
+}
+
+.img-upload-top
+{
+	border: 0px #CCC solid;
+	width: 100%;
+	height:auto;
+}
+
+.img-upload-bottom
+{
+	width: 100%;
+	height:30px;
+	margin-top: 2px;
+}
+.img-upload-console
+{
+	width: 150px;
+	height: 30px;
+	text-align: center;
+	font-size: 14px;
+	line-height: 30px;
+	display: none;
+	border: 1px #CCC solid;
+}
+
+.file-container
+{
+}
+.file-body
+{
+	width: 400px;
+	height: auto;
+}
+.file-body *
+{
+	float: left;
+	font-size: 12px;
+	font-family: "微软雅黑";
+}
+.file-body a
+{
+	margin-left: 5px;
+	text-decoration: none;
+	float: left;
+}
+
+.file-body .iu-slider
+{
+	height: 8px;
+	width: 50px;
+	border: 1px #CCC solid;
+	float: left;
+	margin: 5px;
+	display: none;
+	margin-top:10px;
+}
+.file-body .iu-slider-load
+{
+	height: 100%;
+	width: 0%;
+	background-color: #0064cd;
+}
+
+.filelist
+{
+	height: auto;
+	width: 100%;
+	padding-left:10px;
+	background-color: #EBEBEB;
+	line-height: 30px;
+	margin-top: 3px;
+	border: 1px #CCC solid;
+}
+.filelist_error
+{
+	height: auto;
+	width: 100%;
+	padding-left:10px;
+	line-height: 30px;
+	margin-top: 3px;
+	background-color: #FDE5DD;
+	border: 1px #FBCBBC solid;
+}
+.file-del{
+	color:#ff252a;
+}

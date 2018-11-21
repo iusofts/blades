@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>任务详情</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="resource/admin/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="resource/admin/plugins/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="resource/admin/plugins/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- jvectormap -->
+    <link rel="stylesheet" href="resource/admin/plugins/jvectormap/jquery-jvectormap-1.2.2.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="resource/admin/plugins/datatables/dataTables.bootstrap.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="resource/admin/plugins/select2/select2.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="resource/admin/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="resource/admin/dist/css/skins/_all-skins.min.css">
+
+    <!-- layer ui -->
+    <link rel="stylesheet" href="resource/plugins/layer-v2.1/layer/skin/layer.css">
+    <link rel="stylesheet" href="resource/plugins/backtop/material-scrolltop.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="resource/plugins/cms/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="resource/plugins/cms/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        .required {
+            color: red;
+        }
+    </style>
+</head>
+<body class="">
+<div class="wrapper">
+    <!-- Main content -->
+    <section class="content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- /.box-header -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">基本信息</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <!-- form start -->
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">任务名称：</label>
+                                <div class="col-md-3">
+                                    <span id="job_jobName" class="help-block"></span>
+                                </div>
+
+                                <label class="col-md-2 control-label">任务分组：</label>
+                                <div class="col-md-3">
+                                    <span id="job_jobGroup" class="help-block"></span>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">任务类型：</label>
+                                <div class="col-md-3">
+                                    <span id="job_jobRunType" class="help-block"></span>
+                                </div>
+
+                                <label class="col-md-2 control-label">所属系统：</label>
+                                <div class="col-md-3">
+                                    <span id="job_sysCode" class="help-block"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">任务状态：</label>
+                                <div class="col-md-3">
+                                    <span id="job_status" class="help-block"></span>
+                                </div>
+
+                                <label class="col-md-2 control-label">运行时间表达式：</label>
+                                <div class="col-md-3">
+                                    <span id="job_cronExpression" class="help-block"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">是否异步：</label>
+                                <div class="col-md-3">
+                                    <span id="job_isSync" class="help-block"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">任务执行url：</label>
+                                <div class="col-md-3">
+                                    <span id="job_url" class="help-block"></span>
+                                </div>
+
+                                <label class="col-md-2 control-label">请求方法：</label>
+                                <div class="col-md-3">
+                                    <span id="job_requestMethod" class="help-block"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">队列名：</label>
+                                <div class="col-md-3">
+                                    <span id="job_queueName" class="help-block"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">参数：</label>
+                                <div class="col-md-3">
+                                    <span id="job_param" class="help-block"></span>
+                                </div>
+
+                                
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">任务描述：</label>
+                                <div class="col-md-9">
+                                    <span id="job_description" class="help-block"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">创建时间：</label>
+                                <div class="col-md-3">
+                                    <span id="job_createTime" class="help-block"></span>
+                                </div>
+
+                                <label class="col-md-2 control-label">更新时间：</label>
+                                <div class="col-md-3">
+                                    <span id="job_updateTime" class="help-block"></span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+
+                <!-- /.box-header -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">运行情况</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="form-horizontal">
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">运行总次数：</label>
+                                <div class="col-md-3">
+                                    <span id="job_totalRunNum" class="help-block"></span>
+                                </div>
+
+                                <label class="col-md-2 control-label">运行错误总数：</label>
+                                <div class="col-md-3">
+                                    <span id="job_totalFailedNum" class="help-block"></span>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">失败重试次数：</label>
+                                <div class="col-md-3">
+                                    <span id="job_retriedNum" class="help-block"></span>
+                                </div>
+
+                                <label class="col-md-2 control-label">允许最大重试次数：</label>
+                                <div class="col-md-3">
+                                    <span id="job_maxRetryNum" class="help-block"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">下次执行时间：</label>
+                                <div class="col-md-8">
+                                    <div id="job_nextFireTime" style="display: none;" class="help-block"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">最后一次执行时间：</label>
+                                <div class="col-md-3">
+                                    <span id="job_lastStartTime" class="help-block"></span>
+                                </div>
+
+                                <label class="col-md-2 control-label">最后一次结束时间：</label>
+                                <div class="col-md-3">
+                                    <span id="job_lastEndTime" class="help-block"></span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer clearfix">
+                        <div style="text-align: center;">
+                            <button type="button" class="btn btn-primary" onclick="runOnce()">运行一次</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box -->
+
+            </div>
+            <!-- /.col -->
+        </div>
+    </section>
+    <!-- /.content -->
+
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.0 -->
+<script src="resource/admin/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="resource/admin/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="resource/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="resource/admin/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="resource/admin/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="resource/admin/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="resource/admin/dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="resource/admin/dist/js/demo.js"></script>
+<!-- layer ui -->
+<script src="resource/plugins/layer-v2.1/layer/layer.js"></script>
+<!-- 菜单 -->
+<script src="resource/admin/menu.js"></script>
+<!-- 返回顶部 -->
+<script src="resource/plugins/backtop/material-scrolltop.js"></script>
+<!-- Select2 -->
+<script src="resource/admin/plugins/select2/select2.full.min.js"></script>
+<!-- My97DatePicker -->
+<script src="resource/plugins/calendar/WdatePicker.js"></script>
+
+
+<!-- common script -->
+<script type="text/javascript" src="config/config.js"></script>
+<script type="text/javascript" src="resource/common/js/common.js"></script>
+<script type="text/javascript" src="resource/common/js/page-0.1.js"></script>
+<!-- page script -->
+<script>
+    
+    var jobType = ['一次性任务','重复任务'];
+    var jobStatus = ['正常','暂停','完成','错误','阻塞'];
+    
+    var nextTimeJob = 0;
+    
+    $(window).ready(function () {
+        getDetail();
+    });
+
+    function cancel() {
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        parent.layer.msg('已取消');
+        parent.layer.close(index);
+    }
+
+    /**
+     * 查询详情
+     */
+    function getDetail() {
+        var param = new Object();
+        param.id = getQueryString("id");
+        //加载层
+        var index = layer.load();
+        $.ajax({
+            type: "GET",
+            url: getJobDetailApi + "/" + param.id,
+            cache: false, //禁用缓存
+            //data: JSON.stringify(param), //传入已封装的参数
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (res) {
+                for(var key in res.data){
+                    $("#job_"+key).text(res.data[key]);
+                }
+                
+                //常量翻译
+                $("#job_jobRunType").text(jobType[res.data.jobRunType-1]);
+                $("#job_status").text(jobStatus[res.data.status-1]);
+                $("#job_isSync").text(res.data.isSync==1?'是':'否');
+                
+                
+                if(nextTimeJob!=0){
+                    window.clearInterval(nextTimeJob);
+                }
+                if(res.data.nextFireTime>new Date().getTime()){
+                    nextTimeJob = setInterval('countdown('+res.data.nextFireTime+')',1000); //指定1秒刷新一次 
+                }else{
+                    $("#job_nextFireTime").html('');
+                }
+                layer.close(index);
+            },
+            error: function () {
+                layer.msg("查询失败");
+                //关闭遮罩
+                layer.close(index);
+            }
+        });
+    }
+
+    /**
+     * 运行一次
+     */
+    function runOnce() {
+        var param = new Object();
+        param.id = getQueryString("id");
+        $.ajax({
+            type: "POST",
+            url: runOnceApi,
+            cache: false, //禁用缓存
+            data: JSON.stringify(param), //传入已封装的参数
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (res) {
+                if(res.success){
+                    layer.msg("运行成功");
+                }else{
+                    layer.msg("运行失败");
+                }
+                getDetail();
+            },
+            error: function () {
+                layer.msg("运行失败");
+            }
+        });
+    }
+
+    // 倒计时
+    function countdown(nextTime) {
+        console.log('countdown')
+        if (nextTime != -1) {
+            var nowTime = new Date().getTime();
+            var residueTime = nextTime - nowTime;//剩余毫秒数
+
+            if(residueTime>0) {
+                console.log('countdown2')
+                var residueSecond = parseInt(residueTime / 1000);//剩余秒数
+                var residueMinute = parseInt(residueSecond / 60);//剩余分钟数
+                var residueHour = parseInt(residueMinute / 60);//剩余小时数
+                var residueDay = parseInt(residueHour / 24);//剩余天数
+                // 倒计时时间取余
+                residueHour = residueHour % 24;
+                residueMinute = residueMinute % 60;
+                residueSecond = residueSecond % 60;
+
+                var residueTimeStr = '';
+                if (residueDay > 0) {
+                    residueTimeStr += '<small class="label label-warning"><i class="fa fa-clock-o"></i> ' + residueDay + ' 天</small>&nbsp;';
+                }
+                if (residueHour > 0) {
+                    residueTimeStr += '<small class="label label-info"><i class="fa fa-clock-o"></i> ' + residueHour + ' 小时</small>&nbsp;';
+                }
+                if (residueMinute > 0) {
+                    residueTimeStr += '<small class="label label-primary"><i class="fa fa-clock-o"></i> ' + residueMinute + ' 分钟</small>&nbsp;';
+                }
+                if (residueSecond > 0) {
+                    residueTimeStr += '<small class="label label-danger"><i class="fa fa-clock-o"></i> ' + residueSecond + ' 秒</small>';
+                }
+                $("#job_nextFireTime").html('<a href="#">' + residueTimeStr + '</a>');
+                $("#job_nextFireTime").show();
+            }else{
+                getDetail();
+            }
+        }
+    }
+
+</script>
+</body>
+</html>
