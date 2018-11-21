@@ -20,9 +20,9 @@ public class ConfigWriter implements InitializingBean,DisposableBean {
 
     private static final Logger logger = LoggerFactory.getLogger(ConfigWriter.class);
 
-    private String configPath = "/iHome/config";
+    private String configPath = "/blades/config";
 
-    private String configFile = "global.properties";
+    private String configFile = "blades.properties";
 
     private CuratorFramework client;
 
