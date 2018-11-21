@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel("测试")
-public class TestJsonVO {
+public class TestVO {
 
     @ApiModelProperty("名称")
     String name;

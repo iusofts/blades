@@ -27,7 +27,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("测试接口文档")//大标题
+                .title("blades monitor 接口文档")//大标题
                 .version("1.0")//版本
                 .build();
     }
