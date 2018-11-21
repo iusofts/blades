@@ -1,7 +1,8 @@
 package com.iusofts.blades.monitor;
 
 import com.iusofts.blades.core.BladesDefaultConfig;
-import com.iusofts.blades.monitor.web.controller.TestViewController;
+import com.iusofts.blades.monitor.web.controller.ManageController;
+import com.iusofts.blades.monitor.web.controller.ViewController;
 import com.iusofts.blades.registry.BladesRegister;
 import com.iusofts.blades.registry.initial.BladesInitial;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +32,8 @@ public class BladesConfig {
         bladesInitial.setGroup(serviceName);
         bladesInitial.setRegister(bladesRegister);
         bladesInitial.addExcludeClass(ApiResourceController.class, Swagger2Controller.class);
-        bladesInitial.addExcludeClass(BasicErrorController.class, TestViewController.class);
+        bladesInitial.addExcludeClass(BasicErrorController.class, ViewController.class);
+        bladesInitial.addExcludeClass(ManageController.class);
         return bladesInitial;
     }
 

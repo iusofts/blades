@@ -46,11 +46,6 @@
     });
 
 </script>
-<!-- Morris.js charts -->
-<script src="resource/admin/plugins/ajax/libs/raphael/raphael-min.js"></script>
-<script src="resource/admin/plugins/morris/morris.min.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="resource/admin/dist/js/pages/dashboard.js"></script>
 <!-- common script -->
 <script type="text/javascript" src="config/config.js"></script>
 <script type="text/javascript" src="resource/common/js/common.js"></script>

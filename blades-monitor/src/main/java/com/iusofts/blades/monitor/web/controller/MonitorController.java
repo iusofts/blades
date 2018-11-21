@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 服务监控
  */
-@RequestMapping("/monitor")
 @RestController
 public class MonitorController {
     private static Logger logger = LoggerFactory.getLogger(MonitorController.class);
