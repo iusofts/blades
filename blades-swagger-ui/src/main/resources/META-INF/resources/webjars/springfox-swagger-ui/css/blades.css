@@ -1,0 +1,11 @@
+.serviceName {
+    color: #D38042;
+    float: right;
+    line-height: 28px;
+    padding-right: 10px;
+    font-size: 12px;
+}
+
+.serviceName .name {
+    color: #6fa5d2;
+}

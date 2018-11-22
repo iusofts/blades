@@ -549,6 +549,9 @@
                 var a, o = null != t ? t : {},
                     s = n.helperMissing,
                     l = e.escapeExpression;
+                // blades service name
+                var serviceName = webroot + t.path;
+                serviceName = serviceName.split("/").join('.').substr(1);
                 return "  <ul class='operations' >\n    <li class='" + (null != (a = (n.escape || t && t.escape || s).call(o, null != t ? t.method : t, {
                     name: "escape",
                     hash: {},
@@ -591,7 +594,7 @@
                     name: "escape",
                     hash: {},
                     data: i
-                })) ? a : "") + "</a>\n          </span>\n    <font color='red'>Service Name：xxx.xxx.xxx</font>    </h3>\n        <ul class='options'>\n          <li>\n          <a href='#!/" + l((n.sanitize || t && t.sanitize || s).call(o, null != t ? t.encodedParentId : t, {
+                })) ? a : "") + "</a>\n          </span>\n     </h3>\n    <div class='serviceName'><span>( Service Name : <span class='name'>" + serviceName + "</span> )</span></div>    <ul class='options'>\n          <li>\n          <a href='#!/" + l((n.sanitize || t && t.sanitize || s).call(o, null != t ? t.encodedParentId : t, {
                     name: "sanitize",
                     hash: {},
                     data: i
