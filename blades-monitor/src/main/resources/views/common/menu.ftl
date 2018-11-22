@@ -38,7 +38,7 @@
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
-                    <li id="menu-31" code="authorizations" pid="menu-3"><a href="#"><i class="fa fa-circle-o"></i> 服务授权</a></li>
+                    <li id="menu-31" code="authorizations" pid="menu-3"><a href="authorizations"><i class="fa fa-circle-o"></i> 服务授权</a></li>
                 </ul>
             </li>
             <li id="menu-4" code="intf-doc">
