@@ -13,6 +13,7 @@
         <module>blades-registry</module>
         <module>blades-monitor</module>
         <module>blades-all</module>
+        <module>blades-swagger-ui</module>
     </modules>
     <packaging>pom</packaging>
 
