@@ -66,8 +66,6 @@ public class BladesInitial implements ApplicationContextAware, InitializingBean 
                     RequestMapping requestMapping = AnnotationUtils.findAnnotation(service.getClass(), RequestMapping.class);
                     BladesService bladesServiceClass = AnnotationUtils.findAnnotation(service.getClass(), BladesService.class);
 
-                    String serviceGroup = getServiceGroup(bladesServiceClass, "");
-
                     String path = getPath(requestMapping);
                     String classPath = "";
                     if (StringUtils.isNotEmpty(group)) {
@@ -78,16 +76,25 @@ public class BladesInitial implements ApplicationContextAware, InitializingBean 
                     for (Method method : methods) {
                         RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
                         if (null != methodRequestMapping) {
+                            String serviceName, serviceGroup;
+                            // 优先获取注解中的服务名和分组
                             BladesService bladesServiceMethod = AnnotationUtils.findAnnotation(method, BladesService.class);
 
+                            serviceGroup = getServiceGroup(bladesServiceMethod, "");
                             if (StringUtils.isEmpty(serviceGroup)) {
-                                serviceGroup = getServiceGroup(bladesServiceMethod, group);
+                                serviceGroup = getServiceGroup(bladesServiceClass, group);
                             }
+
                             String methodPath = getPath(methodRequestMapping);
-                            String serviceName = (path + methodPath).replace("/", ".");
-                            if (serviceName.indexOf(".") == 0) {
-                                serviceName = serviceName.substring(1);
+                            if (bladesServiceMethod == null) {
+                                serviceName = (path + methodPath).replace("/", ".");
+                                if (serviceName.indexOf(".") == 0) {
+                                    serviceName = serviceName.substring(1);
+                                }
+                            } else {
+                                serviceName = getServiceName(bladesServiceMethod, "");
                             }
+
                             register.registerService(localHostName, localIp, localPort, classPath, methodPath, serviceName, serviceGroup);
                         }
                     }

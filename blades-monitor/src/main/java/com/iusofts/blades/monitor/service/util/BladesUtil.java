@@ -2,7 +2,7 @@ package com.iusofts.blades.monitor.service.util;
 
 import com.iusofts.blades.common.domain.ServiceInstanceDetail;
 import com.iusofts.blades.common.util.JsonUtils;
-import com.iusofts.blades.monitor.common.zookeeper.JavaApiSample;
+import com.iusofts.blades.common.zookeeper.JavaApiSample;
 import com.iusofts.blades.monitor.service.dto.*;
 import com.iusofts.blades.monitor.service.enums.ApplicationType;
 import org.apache.commons.lang3.StringUtils;
@@ -440,13 +440,6 @@ public class BladesUtil {
     @Value("${blades.zkAddress}")
     public void setZkAddress(String zkAddress) {
         CONNECTION_STRING = zkAddress;
-    }
-
-    @Value("${blades.defaultTimeOut}")
-    public void setDefaultTimeOut(String defaultTimeOut) {
-        if (StringUtils.isBlank(defaultTimeOut)) {
-            SESSION_TIMEOUT = Integer.parseInt(defaultTimeOut);
-        }
     }
 
     @Value("${blades.servicePath}")

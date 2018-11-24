@@ -20,17 +20,18 @@ import springfox.documentation.swagger2.web.Swagger2Controller;
 @Configuration
 public class BladesConfig {
 
-    @Value("${blades.serviceName}")
-    private String serviceName;
-    @Value("${blades.servicePort}")
-    private String servicePort;
+    @Value("${blades.application.name}")
+    private String applicationName;
+    @Value("${blades.application.port}")
+    private String applicationPort;
 
     @Bean("serviceInitial")
     public BladesInitial createBladesInitial(BladesRegister bladesRegister) throws Exception {
         BladesInitial bladesInitial = new BladesInitial();
-        bladesInitial.setPort(servicePort);
-        bladesInitial.setGroup(serviceName);
+        bladesInitial.setPort(applicationPort);
+        bladesInitial.setGroup(applicationName);
         bladesInitial.setRegister(bladesRegister);
+        // 过滤掉不想暴露出去的控制器
         bladesInitial.addExcludeClass(ApiResourceController.class, Swagger2Controller.class);
         bladesInitial.addExcludeClass(BasicErrorController.class, ViewController.class);
         bladesInitial.addExcludeClass(ManageController.class);

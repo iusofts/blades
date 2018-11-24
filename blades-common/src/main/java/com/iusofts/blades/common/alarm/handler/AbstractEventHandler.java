@@ -2,6 +2,7 @@ package com.iusofts.blades.common.alarm.handler;
 
 import com.iusofts.blades.common.alarm.po.CommonEvent;
 import com.iusofts.blades.common.alarm.report.EventReport;
+import com.iusofts.blades.common.util.IPUtil;
 import com.iusofts.blades.common.util.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,22 +92,12 @@ public abstract class AbstractEventHandler<T extends CommonEvent> implements App
 
 
     public static String fetchLocalIP() {
-        String localIP = "127.0.0.1";
-        DatagramSocket sock = null;
-
+        String localIP = null;
         try {
-            InetSocketAddress e = new InetSocketAddress(InetAddress.getByName("1.2.3.4"), 1);
-            sock = new DatagramSocket();
-            sock.connect(e);
-            localIP = sock.getLocalAddress().getHostAddress();
-        } catch (Exception var6) {
-            var6.printStackTrace();
-        } finally {
-            sock.disconnect();
-            sock.close();
-            sock = null;
+            localIP = IPUtil.getLocalHostLANAddress().getHostAddress();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         return localIP;
     }
 

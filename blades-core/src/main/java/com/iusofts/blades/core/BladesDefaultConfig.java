@@ -12,7 +12,7 @@ import com.iusofts.blades.registry.BladesRegister;
 import com.iusofts.blades.registry.ZkCuratorServiceClient;
 import com.iusofts.blades.registry.initial.CuratorFrameworkFactoryBean;
 import org.apache.curator.framework.CuratorFramework;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -23,17 +23,19 @@ import org.springframework.web.client.RestTemplate;
  * 锦衣卫配置
  */
 @Configuration
-@ConfigurationProperties(prefix = "blades")
 public class BladesDefaultConfig {
 
-    private String serviceName;
-    private String servicePort;
+    @Value("${blades.zkAddress}")
     private String zkAddress;
-    private Integer defaultTimeOut;
+    @Value("${blades.executionTimeOut}")
+    private Integer executionTimeOut;
+    @Value("${blades.waitingTimeOut}")
     private Integer waitingTimeOut;
-    private String zkAdwaitingTimeOutdress;
+    @Value("${blades.servicePath}")
     private String servicePath;
+    @Value("${blades.configPath}")
     private String configPath;
+    @Value("${blades.configFile}")
     private String configFile;
 
 
@@ -100,7 +102,7 @@ public class BladesDefaultConfig {
     public Invoker createInvoker(ServiceFinder serviceFinder) {
         Invoker invoker = new Invoker();
         invoker.setServiceFinder(serviceFinder);
-        invoker.setDefaultTimeOut(defaultTimeOut);
+        invoker.setDefaultTimeOut(executionTimeOut);
         invoker.setWaitingTimeOut(waitingTimeOut);
         invoker.setRestTemplate(new RestTemplate());
         return invoker;
@@ -116,75 +118,4 @@ public class BladesDefaultConfig {
         return new RoundRobinStrategy();
     }
 
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
-
-    public String getServicePort() {
-        return servicePort;
-    }
-
-    public void setServicePort(String servicePort) {
-        this.servicePort = servicePort;
-    }
-
-    public String getZkAddress() {
-        return zkAddress;
-    }
-
-    public void setZkAddress(String zkAddress) {
-        this.zkAddress = zkAddress;
-    }
-
-    public Integer getDefaultTimeOut() {
-        return defaultTimeOut;
-    }
-
-    public void setDefaultTimeOut(Integer defaultTimeOut) {
-        this.defaultTimeOut = defaultTimeOut;
-    }
-
-    public Integer getWaitingTimeOut() {
-        return waitingTimeOut;
-    }
-
-    public void setWaitingTimeOut(Integer waitingTimeOut) {
-        this.waitingTimeOut = waitingTimeOut;
-    }
-
-    public String getZkAdwaitingTimeOutdress() {
-        return zkAdwaitingTimeOutdress;
-    }
-
-    public void setZkAdwaitingTimeOutdress(String zkAdwaitingTimeOutdress) {
-        this.zkAdwaitingTimeOutdress = zkAdwaitingTimeOutdress;
-    }
-
-    public String getServicePath() {
-        return servicePath;
-    }
-
-    public void setServicePath(String servicePath) {
-        this.servicePath = servicePath;
-    }
-
-    public String getConfigPath() {
-        return configPath;
-    }
-
-    public void setConfigPath(String configPath) {
-        this.configPath = configPath;
-    }
-
-    public String getConfigFile() {
-        return configFile;
-    }
-
-    public void setConfigFile(String configFile) {
-        this.configFile = configFile;
-    }
 }

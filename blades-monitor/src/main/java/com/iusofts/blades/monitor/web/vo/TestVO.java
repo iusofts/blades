@@ -1,4 +1,4 @@
-package com.iusofts.blades.monitor.web.controller;
+package com.iusofts.blades.monitor.web.vo;
 
 
 import io.swagger.annotations.ApiModel;

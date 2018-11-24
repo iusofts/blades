@@ -35,10 +35,11 @@ spring:
 
 ########### blades 相关配置 ###########
 blades:
-  serviceName: blades-monitor
-  servicePort: 8081
+  application:
+    name: blades-monitor
+    port: 8081
   zkAddress: 127.0.0.1:2181
-  defaultTimeOut: 10000
+  executionTimeOut: 10000
   waitingTimeOut: 20000
   servicePath: /blades_dev/services
   configPath: /blades_dev/config

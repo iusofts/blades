@@ -1,4 +1,4 @@
-package com.iusofts.blades.monitor.common.zookeeper;
+package com.iusofts.blades.common.zookeeper;
 
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
@@ -20,8 +20,8 @@ public class JavaApiSample implements Watcher {
 
     private static JavaApiSample javaApiSample=null;
 	private static final int SESSION_TIMEOUT = 10000;
-    private static final String CONNECTION_STRING = "zk-01.ihomefnt.com:2181";
-    private static final String ZK_PATH = "/dubbo-dev";
+    private static final String CONNECTION_STRING = "127.0.0.1:2181";
+    private static final String ZK_PATH = "/blades-dev";
     private ZooKeeper zk = null;
 
     private CountDownLatch connectedSemaphore = new CountDownLatch( 1 );
