@@ -35,9 +35,9 @@
                     <!-- small box -->
                     <div class="small-box bg-aqua">
                         <div class="inner">
-                            <h3 id="status_1">-</h3>
+                            <h3 id="status_1">-/-</h3>
 
-                            <p>服务</p>
+                            <p>服务/应用</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-grid"></i>
@@ -65,9 +65,9 @@
                     <!-- small box -->
                     <div class="small-box bg-red">
                         <div class="inner">
-                            <h3><span id="status_4">-</span>/<span id="status_6">-</span></h3>
+                            <h3>-</h3>
 
-                            <p>错误/重试</p>
+                            <p>错误</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-close-circled"></i>

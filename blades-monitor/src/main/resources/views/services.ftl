@@ -31,7 +31,7 @@
         <!-- Main content -->
         <section class="content">
 
-            <div class="row">
+            <div class="row" style="display: none;">
                 <div class="col-md-12">
                     <div class="box box-primary">
                         <div class="box-header with-border">
@@ -82,10 +82,10 @@
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="box box-primary box-solid">
-                        <div class="box-header">
-                            <h3 class="box-title">查询结果</h3>
-                        </div>
+                    <div class="box box-primary">
+                        <#--<div class="box-header">-->
+                            <#--<h3 class="box-title">查询结果</h3>-->
+                        <#--</div>-->
                         <!-- /.box-header -->
                         <div class="box-body">
                             <!-- 定义一个表格元素 -->
@@ -144,10 +144,56 @@
                 { "data": "group" },
                 { "data": "providerAmount" },
                 { "data": "consumerAmount" }
+            ],
+            "columnDefs": [
+                {
+                    "render": function ( data, type, row ) {
+                        return '<a href="javascript:void(0)" onclick="showProvider(\''+ row['name'] +'\')" title="查看提供者">' + data + '</a>';
+                    },
+                    "targets": 2
+                },
+                {
+                    "render": function ( data, type, row ) {
+                        return '<a href="javascript:void(0)" onclick="showConsumer(\''+ row['group'] +'\')" title="查看消费者">' + data + '</a>';
+                    },
+                    "targets": 3
+                }
             ]
         } );
 
     });
+
+    /**
+     * 查看提供者
+     * @param serviceName
+     */
+    function showProvider(serviceName) {
+        layer.open({
+            title: "服务["+serviceName+"]的提供者",
+            type: 2,
+            shadeClose: true,
+            area: ['800px', '500px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: './getProviderList?serviceName=' + serviceName
+        });
+    }
+
+    /**
+     * 查看消费者
+     * @param appName
+     */
+    function showConsumer(appName) {
+        layer.open({
+            title: "应用["+appName+"]的消费者",
+            type: 2,
+            shadeClose: true,
+            area: ['800px', '500px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: './getConsumerList?appName=' + appName
+        });
+    }
 
 </script>
 </body>
