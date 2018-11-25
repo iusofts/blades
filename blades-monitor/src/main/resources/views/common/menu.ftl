@@ -22,7 +22,7 @@
             </li>
             <li class="treeview" id="menu-2" code="storeroom-manage">
                 <a href="#">
-                    <i class="fa fa-clock-o"></i>
+                    <i class="fa fa-server"></i>
                     <span>服务管理</span>
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
@@ -33,7 +33,7 @@
             </li>
             <li class="treeview" id="menu-3" code="storeroom-manage">
                 <a href="#">
-                    <i class="fa fa-clock-o"></i>
+                    <i class="fa fa-key"></i>
                     <span>权限管理</span>
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
