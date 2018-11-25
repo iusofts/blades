@@ -1,8 +1,12 @@
 package com.iusofts.blades.core;
 
+import com.iusofts.blades.common.util.ServiceLocator;
+import com.iusofts.blades.core.alarm.BladesAccessEventHandler;
+import com.iusofts.blades.common.alarm.publish.EventPublisher;
 import com.iusofts.blades.common.config.ConfigReader;
 import com.iusofts.blades.common.config.ConfigUtil;
 import com.iusofts.blades.common.config.ConfigWriter;
+import com.iusofts.blades.core.alarm.MonitorReport;
 import com.iusofts.blades.core.finder.Invoker;
 import com.iusofts.blades.core.finder.ServiceFinder;
 import com.iusofts.blades.core.finder.ZkServiceFinder;
@@ -99,12 +103,13 @@ public class BladesDefaultConfig {
     }
 
     @Bean("serviceCaller")
-    public Invoker createInvoker(ServiceFinder serviceFinder) {
+    public Invoker createInvoker(ServiceFinder serviceFinder, EventPublisher eventPublisher) {
         Invoker invoker = new Invoker();
         invoker.setServiceFinder(serviceFinder);
         invoker.setDefaultTimeOut(executionTimeOut);
         invoker.setWaitingTimeOut(waitingTimeOut);
         invoker.setRestTemplate(new RestTemplate());
+        invoker.setEventPublisher(eventPublisher);
         return invoker;
     }
 
@@ -117,5 +122,26 @@ public class BladesDefaultConfig {
     public RoundRobinStrategy createRoundRobinStrategy() {
         return new RoundRobinStrategy();
     }
+
+    @Bean
+    public EventPublisher createEventPublisher() {
+        return new EventPublisher();
+    }
+
+    @Bean
+    public BladesAccessEventHandler createBladesAccessEventHandler() {
+        return new BladesAccessEventHandler();
+    }
+
+    @Bean("bladesEventReport")
+    public MonitorReport createMonitorReport() {
+        return new MonitorReport();
+    }
+
+    @Bean
+    public ServiceLocator createServiceLocator() {
+        return ServiceLocator.init();
+    }
+
 
 }

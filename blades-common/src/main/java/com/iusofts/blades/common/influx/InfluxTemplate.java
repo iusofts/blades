@@ -1,4 +1,4 @@
-package com.iusofts.blades.common.alarm.report;
+package com.iusofts.blades.common.influx;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;

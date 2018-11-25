@@ -75,7 +75,7 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
             this.publishAccessSuccessEvent(endTime - startTime);
             return response;
         } catch (Exception e) {
-            this.publishAccessFailedEvent();
+            this.publishAccessFailedEvent(e.getMessage());
             if (e instanceof ServiceNotAvailableException
                     || e instanceof ServiceNotFoundException
                     || e instanceof ServiceNotAuthException) {
@@ -88,14 +88,14 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
 
     }
 
-    private void publishAccessFailedEvent() {
+    private void publishAccessFailedEvent(String errorMsg) {
         if (null == eventPublisher) {
             // 未配置
             return;
         }
         try {
             // 调用失败的不统计调用耗时
-            BladesAccessEvent bladesAccessEvent = new BladesAccessEvent("bladesAccess", BladesInitial.group, 0, serviceName, "success");
+            BladesAccessEvent bladesAccessEvent = new BladesAccessEvent("bladesAccess", BladesInitial.group, 0, serviceName, false, errorMsg);
             eventPublisher.publish(bladesAccessEvent);
         } catch (Exception e) {
             // never throw exception
@@ -110,7 +110,7 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
             return;
         }
         try {
-            BladesAccessEvent bladesAccessEvent = new BladesAccessEvent("bladesAccess", BladesInitial.group, costTime, serviceName, "failed");
+            BladesAccessEvent bladesAccessEvent = new BladesAccessEvent("bladesAccess", BladesInitial.group, costTime, serviceName, true, "success");
             eventPublisher.publish(bladesAccessEvent);
         } catch (Exception e) {
             // never throw exception

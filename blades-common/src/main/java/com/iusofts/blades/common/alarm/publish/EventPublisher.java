@@ -21,9 +21,9 @@ public class EventPublisher implements ApplicationEventPublisherAware {
     }
 
     public void publish(CommonEvent event) {
-        logger.debug("publish event {}",event);
+        logger.info("publish event {}", event);
         if (null == event) {
-            logger.debug("the publishing event is empty");
+            logger.info("the publishing event is empty");
             return;
         }
 

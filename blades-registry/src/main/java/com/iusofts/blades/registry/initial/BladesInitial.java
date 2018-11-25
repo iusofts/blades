@@ -30,11 +30,13 @@ public class BladesInitial implements ApplicationContextAware, InitializingBean 
     private static final Logger logger = LoggerFactory.getLogger(BladesInitial.class);
     private static Map<String, Object> bladesServices = new HashMap<>();
 
-    private String ip;
-    private String port;
-    private IRegister register;
+    public static String ip;
+    public static String port;
     public static String group;
-    private String hostName;
+    public static String hostName;
+    public static boolean openMonitor = true;// 默认打开监控
+    public static String monitorServiceName = "blades-monitor.monitor.record";// 监控服务名称
+    private IRegister register;
     private List<Class> excludeClasses;
 
     @Override
@@ -58,6 +60,8 @@ public class BladesInitial implements ApplicationContextAware, InitializingBean 
         final String localIp = this.getLocalHost()[0];
         final String localHostName = this.getLocalHost()[1];
         final String localPort = port;
+        ip = localIp;
+        hostName = localHostName;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -186,4 +190,11 @@ public class BladesInitial implements ApplicationContextAware, InitializingBean 
         }
     }
 
+    public static void setOpenMonitor(boolean openMonitor) {
+        BladesInitial.openMonitor = openMonitor;
+    }
+
+    public static void setMonitorServiceName(String monitorServiceName) {
+        BladesInitial.monitorServiceName = monitorServiceName;
+    }
 }
