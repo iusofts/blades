@@ -46,7 +46,7 @@ public class BladesConfig {
     }
 
     /**
-     * Okhhtp选配,不配置默认采用simpleClientHttpRequestFactory
+     * OKHttp选配,不配置默认采用simpleClientHttpRequestFactory
      * @return
      */
     @Primary

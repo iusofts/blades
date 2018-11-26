@@ -43,8 +43,6 @@ blades:
     path: /blades_dev
   executionTimeOut: 10000
   waitingTimeOut: 20000
-  servicePath: /blades_dev/services
-  configPath: /blades_dev/config
 
 ---
 
