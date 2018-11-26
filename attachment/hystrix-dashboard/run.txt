@@ -1,7 +1,8 @@
 Hystrix-Dashboard使用
-①下载https://bintray.com/kennedyoliveira/maven/standalone-hystrix-dashboard/1.5.6
+①下载 https://bintray.com/kennedyoliveira/maven/standalone-hystrix-dashboard/1.5.6
 附件中有下载好的jar
-②运行nohup java -jar standalone-hystrix-dashboard-1.5.6-all.jar &
-③浏览器打开http://localhost:7979/hystrix-dashboard/  输入地址http://localhost:8081/blades-monitor/hystrix.stream
+②运行 nohup java -jar standalone-hystrix-dashboard-1.5.6-all.jar &
+③浏览器打开 http://localhost:7979/hystrix-dashboard/  
+输入地址 http://127.0.0.1:8081/blades-monitor/hystrix.stream
 先点击 add stream
 然后点击monitor stream既可以查看
