@@ -1,11 +1,11 @@
 package com.iusofts.blades.core;
 
-import com.iusofts.blades.common.util.ServiceLocator;
-import com.iusofts.blades.core.alarm.BladesAccessEventHandler;
 import com.iusofts.blades.common.alarm.publish.EventPublisher;
 import com.iusofts.blades.common.config.ConfigReader;
 import com.iusofts.blades.common.config.ConfigUtil;
 import com.iusofts.blades.common.config.ConfigWriter;
+import com.iusofts.blades.common.util.ServiceLocator;
+import com.iusofts.blades.core.alarm.BladesAccessEventHandler;
 import com.iusofts.blades.core.alarm.MonitorReport;
 import com.iusofts.blades.core.finder.Invoker;
 import com.iusofts.blades.core.finder.ServiceFinder;
@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
@@ -31,18 +32,17 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class BladesDefaultConfig {
 
-    @Value("${blades.zkAddress}")
+    @Value("${blades.zookeeper.address}")
     private String zkAddress;
+    @Value("${blades.zookeeper.path}")
+    private String zkPath;
     @Value("${blades.executionTimeOut}")
     private Integer executionTimeOut;
     @Value("${blades.waitingTimeOut}")
     private Integer waitingTimeOut;
-    @Value("${blades.servicePath}")
-    private String servicePath;
-    @Value("${blades.configPath}")
-    private String configPath;
-    @Value("${blades.configFile}")
-    private String configFile;
+    private String servicePath = "/services";
+    private String configPath = "/config";
+    private String configFile = "hystrix.properties";
 
 
     @Bean
@@ -58,7 +58,7 @@ public class BladesDefaultConfig {
     public ConfigWriter createConfigWriter(CuratorFramework curatorFramework) {
         ConfigWriter configWriter = new ConfigWriter();
         configWriter.setConfigFile(configFile);
-        configWriter.setConfigPath(configPath);
+        configWriter.setConfigPath(zkPath + configPath);
         configWriter.setClient(curatorFramework);
         return configWriter;
     }
@@ -77,22 +77,28 @@ public class BladesDefaultConfig {
     }
 
     @Bean
+    public RestTemplate createRestTemplate(ClientHttpRequestFactory clientHttpRequestFactory) {
+        RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
+        return restTemplate;
+    }
+
+    @Bean("simpleClientHttpRequestFactory")
     public SimpleClientHttpRequestFactory createSimpleClientHttpRequestFactory() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(5000);
-        factory.setReadTimeout(5000);
+        factory.setConnectTimeout(30000);
+        factory.setReadTimeout(30000);
         return factory;
     }
 
     @Bean("serviceRegister")
     public BladesRegister createBladesRegister(CuratorFramework curatorFramework) throws Exception {
-        BladesRegister bladesRegister = new BladesRegister(curatorFramework, servicePath);
+        BladesRegister bladesRegister = new BladesRegister(curatorFramework, zkPath + servicePath);
         return bladesRegister;
     }
 
     @Bean
     public ZkCuratorServiceClient createZkCuratorServiceClient(CuratorFramework curatorFramework) throws Exception {
-        ZkCuratorServiceClient client = new ZkCuratorServiceClient(curatorFramework, servicePath);
+        ZkCuratorServiceClient client = new ZkCuratorServiceClient(curatorFramework, zkPath + servicePath);
         return client;
     }
 
@@ -105,12 +111,12 @@ public class BladesDefaultConfig {
     }
 
     @Bean("serviceCaller")
-    public Invoker createInvoker(ServiceFinder serviceFinder, EventPublisher eventPublisher) {
+    public Invoker createInvoker(ServiceFinder serviceFinder, EventPublisher eventPublisher, RestTemplate restTemplate) {
         Invoker invoker = new Invoker();
         invoker.setServiceFinder(serviceFinder);
         invoker.setDefaultTimeOut(executionTimeOut);
         invoker.setWaitingTimeOut(waitingTimeOut);
-        invoker.setRestTemplate(new RestTemplate());
+        invoker.setRestTemplate(restTemplate);
         invoker.setEventPublisher(eventPublisher);
         return invoker;
     }

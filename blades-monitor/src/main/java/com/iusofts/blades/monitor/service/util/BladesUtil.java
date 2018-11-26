@@ -437,19 +437,15 @@ public class BladesUtil {
     }
 
     // 以下注入静态属性
-    @Value("${blades.zkAddress}")
+    @Value("${blades.zookeeper.address}")
     public void setZkAddress(String zkAddress) {
         CONNECTION_STRING = zkAddress;
     }
 
-    @Value("${blades.servicePath}")
+    @Value("${blades.zookeeper.path}")
     public void setBbasePath(String basePath) {
-        ZK_SERVICE_PATH = basePath;
-    }
-
-    @Value("${blades.configPath}")
-    public void setConfigPath(String configPath) {
-        ZK_CONFIG_PATH = configPath;
+        ZK_SERVICE_PATH = basePath + "/services";
+        ZK_CONFIG_PATH = basePath + "/config";
     }
 
     public static void main(String[] args) throws IOException {

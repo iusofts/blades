@@ -3,7 +3,6 @@ package com.iusofts.blades.core.finder;
 
 import com.google.common.collect.Sets;
 import com.iusofts.blades.common.alarm.publish.EventPublisher;
-import com.iusofts.blades.common.api.ApiUtil;
 import com.iusofts.blades.common.config.ConfigUtil;
 import com.iusofts.blades.common.domain.AsyncFuture;
 import com.iusofts.blades.common.excption.ServiceNotAuthException;
@@ -175,14 +174,6 @@ public class Invoker implements ServiceCaller {
 
     public void setEventPublisher(EventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public <T> T post(String serviceName, Object param, TypeReference typeReference) throws ServiceNotFoundException,
-            ServiceNotAvailableException {
-        Object obj = postFuture(serviceName, param, Object.class).get();
-        return (T) ApiUtil.mapper(obj, typeReference);
     }
 
 }

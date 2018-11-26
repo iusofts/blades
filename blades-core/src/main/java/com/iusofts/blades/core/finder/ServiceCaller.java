@@ -49,6 +49,4 @@ public interface ServiceCaller {
     <T> T post(String serviceName, String url, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException;
 
     <T> T post(String serviceName, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException;
-
-    <T> T post(String serviceName, Object param, @SuppressWarnings("rawtypes") TypeReference typeReference) throws ServiceNotFoundException, ServiceNotAvailableException;
 }
