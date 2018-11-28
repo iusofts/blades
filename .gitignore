@@ -1,9 +1,9 @@
 # maven ignore
 target/
-*.jar
+#*.jar
 !.mvn/wrapper/*
 *.war
-*.zip
+#*.zip
 *.tar
 *.tar.gz
 
