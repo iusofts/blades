@@ -7,6 +7,7 @@ import com.iusofts.blades.monitor.service.dto.*;
 import com.iusofts.blades.monitor.service.enums.ApplicationType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.x.discovery.ServiceInstance;
+import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -396,7 +397,7 @@ public class BladesUtil {
                 if (serviceInstance != null && serviceInstance.getPayload() != null) {
                     serviceInstance.getPayload().setIsolated(isolated);
                     log.info("updateServiceIsolated serviceId:{},isolated:{}" + isolated);
-                    sample.writeData(servidePath, JsonUtils.obj2json(serviceInstance));
+                    sample.writeData(servidePath, objectMapper.writeValueAsString(serviceInstance));
 
                     // 刷新缓存
                     Map<String, ServiceInstance<ServiceInstanceDetail>> serviceInstanceMap = serviceDataMap
