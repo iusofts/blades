@@ -1,0 +1,57 @@
+﻿html,body
+{
+	margin: 0px;
+	padding: 0px;
+}
+
+.overlay {
+	fill: none;
+	pointer-events: all;
+}
+
+.pathRoot {
+	stroke-dasharray: 3;
+	-webkit-animation: dash 1s linear infinite;
+	/* animation加上alternate 可回头*/
+}
+
+@-webkit-keyframes dash {
+	from {
+		stroke-dashoffset: 60;
+	}
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+
+.link {
+	fill: none;
+	stroke: #ccc;
+	stroke-width: 1px;
+	opacity: .8;
+	marker-end: url(#arrow);
+	transition: opacity 250ms;
+	-webkit-transition: opacity 250ms;
+	-moz-transition: opacity 250ms;
+}
+
+.labeltext {
+	font-size: 16px;
+	font-family: SimSun;
+	fill: #000000;
+}
+
+.nodetext {
+	font-size: 12px;
+	font-family: SimSun;
+	fill: #000000;
+}
+
+.linetext {
+	font-size: 12px;
+	font-family: SimSun;
+	fill: green;
+	fill-opacity: 0.0;
+}
+

@@ -1,0 +1,23 @@
+{
+  "edges": [
+    {
+      "fromID": "2",
+      "relation": "调用200次",
+      "toID": "1",
+      "weight": 1,
+      "color": "#000"
+    }
+  ],
+  "nodes": [
+    {
+      "icon": "APP",
+      "id": "1",
+      "name": "blades-monitor"
+    },
+    {
+      "icon": "APP",
+      "id": "2",
+      "name": "product"
+    }
+  ]
+}

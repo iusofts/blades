@@ -29,6 +29,7 @@
                 <ul class="treeview-menu">
                     <li id="menu-21" code="services" pid="menu-2"><a href="services"><i class="fa fa-circle-o"></i> 服务列表</a></li>
                     <li id="menu-22" code="applications" pid="menu-2"><a href="applications"><i class="fa fa-circle-o"></i> 应用列表</a></li>
+                    <li id="menu-23" code="relationship" pid="menu-2"><a href="relationship"><i class="fa fa-circle-o"></i> 调用关系</a></li>
                 </ul>
             </li>
             <li class="treeview" id="menu-3" code="storeroom-manage">

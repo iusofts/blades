@@ -27,6 +27,12 @@ public class ViewController {
         return "/applications";
     }
 
+    @ApiOperation("调用关系")
+    @RequestMapping("/relationship")
+    public String relationship() {
+        return "/relationship";
+    }
+
     @ApiOperation("授权列表")
     @RequestMapping("/authorizations")
     public String authorizations() {
