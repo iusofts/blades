@@ -1,7 +1,7 @@
-package com.iusofts.blades.monitor.service.dto;
+package com.iusofts.blades.monitor.inft.dto;
 
 
-import com.iusofts.blades.monitor.service.enums.ApplicationType;
+import com.iusofts.blades.monitor.inft.enums.ApplicationType;
 
 /**
  * 应用

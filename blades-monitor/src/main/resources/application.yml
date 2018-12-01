@@ -32,6 +32,9 @@ spring:
     request-context-attribute: rc
     suffix: .ftl
     template-loader-path: classpath:/views/
+############influxDB##################
+influx:
+  connectUrl: http://127.0.0.1:8086
 
 ########### blades 相关配置 ###########
 blades:

@@ -3,11 +3,10 @@ package com.iusofts.blades.monitor.service.util;
 import com.iusofts.blades.common.domain.ServiceInstanceDetail;
 import com.iusofts.blades.common.util.JsonUtils;
 import com.iusofts.blades.common.zookeeper.JavaApiSample;
-import com.iusofts.blades.monitor.service.dto.*;
-import com.iusofts.blades.monitor.service.enums.ApplicationType;
+import com.iusofts.blades.monitor.inft.dto.*;
+import com.iusofts.blades.monitor.inft.enums.ApplicationType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.x.discovery.ServiceInstance;
-import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -90,7 +89,6 @@ public class BladesUtil {
             List<String> configFileNames = sample.redChildList(ZK_CONFIG_PATH);
             // System.err.println("configFileNames:" + configFileNames);
 
-            List<Link> links = new ArrayList<>();
             for (String configFileName : configFileNames) {
                 if (configFileName.indexOf(AUTHORIZATION_SUFFIX) != -1) {
                     String strs[] = configFileName.split(AUTHORIZATION_SUFFIX);

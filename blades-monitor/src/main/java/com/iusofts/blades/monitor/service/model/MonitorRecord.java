@@ -1,34 +1,76 @@
-package com.iusofts.blades.core.alarm.vo;
+package com.iusofts.blades.monitor.service.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.alibaba.fastjson.annotation.JSONField;
 
-@ApiModel("监控记录")
-public class MonitorRecordVo {
+/**
+ * 监控记录
+ */
+public class MonitorRecord {
 
-    @ApiModelProperty("服务名称")
+    /**
+     * 服务名称
+     */
+    @JSONField(label = "tag")
     String serviceName;
-    @ApiModelProperty("是否成功")
+
+    /**
+     * 是否成功
+     */
+    @JSONField(label = "tag")
     boolean success;
-    @ApiModelProperty("花费时间")
+
+    /**
+     * 花费时间
+     */
+    @JSONField(label = "field")
     long costTime;
 
-    @ApiModelProperty("提供者名称")
+    /**
+     * 提供者名称
+     */
+    @JSONField(label = "tag")
     String providerName;
-    @ApiModelProperty("提供者IP")
+
+    /**
+     * 提供者IP
+     */
+    @JSONField(label = "field")
     String providerIP;
-    @ApiModelProperty("提供者端口")
+
+    /**
+     * 提供者端口
+     */
+    @JSONField(label = "field")
     String providerPort;
-    @ApiModelProperty("提供者主机名")
+
+    /**
+     * 提供者主机名
+     */
+    @JSONField(label = "field")
     String providerHostName;
 
-    @ApiModelProperty("消费者名称")
+    /**
+     * 消费者名称
+     */
+    @JSONField(label = "tag")
     String consumerName;
-    @ApiModelProperty("消费者IP")
+
+    /**
+     * 消费者IP
+     */
+    @JSONField(label = "field")
     String consumerIP;
-    @ApiModelProperty("消费者端口")
+
+    /**
+     * 消费者端口
+     */
+    @JSONField(label = "field")
     String consumerPort;
-    @ApiModelProperty("消费者主机名")
+
+    /**
+     * 消费者主机名
+     */
+    @JSONField(label = "field")
     String consumerHostName;
 
     public String getServiceName() {
@@ -37,22 +79,6 @@ public class MonitorRecordVo {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public long getCostTime() {
-        return costTime;
-    }
-
-    public void setCostTime(long costTime) {
-        this.costTime = costTime;
     }
 
     public String getProviderName() {
@@ -117,5 +143,21 @@ public class MonitorRecordVo {
 
     public void setConsumerHostName(String consumerHostName) {
         this.consumerHostName = consumerHostName;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public long getCostTime() {
+        return costTime;
+    }
+
+    public void setCostTime(long costTime) {
+        this.costTime = costTime;
     }
 }

@@ -1,15 +1,7 @@
-/*
- * Copyright (C) 2006-2016 AiJia All rights reserved
- * Author: Ivan Shen
- * Date: 2017/1/17
- * Description:Service.java
- */
-package com.iusofts.blades.monitor.service.dto;
+package com.iusofts.blades.monitor.inft.dto;
 
 /**
  * 服务
- *
- * @author Ivan Shen
  */
 public class Service {
 

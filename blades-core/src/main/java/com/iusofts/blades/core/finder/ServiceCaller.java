@@ -26,27 +26,27 @@ public interface ServiceCaller {
 
     <T> AsyncFuture<T> postFuture(String serviceName, Object param, Type clazz, T fallBack, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException;
 
-    <T> AsyncFuture<T> postFuture(String serviceName, String url, Object param, Type clazz, T fallBack, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException;
+    <T> AsyncFuture<T> postFuture(String serviceName, String uri, Object param, Type clazz, T fallBack, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException;
 
-    <T> AsyncFuture<T> postFuture(String serviceName, String url, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException;
+    <T> AsyncFuture<T> postFuture(String serviceName, String uri, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException;
 
-    <T> AsyncFuture<T> postFuture(String serviceName, String url, Object param, Type clazz, T fallBack) throws ServiceNotFoundException, ServiceNotAvailableException;
+    <T> AsyncFuture<T> postFuture(String serviceName, String uri, Object param, Type clazz, T fallBack) throws ServiceNotFoundException, ServiceNotAvailableException;
 
-    <T> AsyncFuture<T> postFuture(String serviceName, String url, Object param, Type clazz, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException;
+    <T> AsyncFuture<T> postFuture(String serviceName, String uri, Object param, Type clazz, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException;
 
-    <T> AsyncFuture<T> getFuture(String serviceName, String url, Object param, Type clazz, T fallBack, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException;
+    <T> AsyncFuture<T> getFuture(String serviceName, String uri, Object param, Type clazz, T fallBack, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException;
 
-    <T> AsyncFuture<T> getFuture(String serviceName, String url, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException;
+    <T> AsyncFuture<T> getFuture(String serviceName, String uri, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException;
 
-    <T> AsyncFuture<T> getFuture(String serviceName, String url, Object param, Type clazz, T fallBack) throws ServiceNotFoundException, ServiceNotAvailableException;
+    <T> AsyncFuture<T> getFuture(String serviceName, String uri, Object param, Type clazz, T fallBack) throws ServiceNotFoundException, ServiceNotAvailableException;
 
-    <T> AsyncFuture<T> getFuture(String serviceName, String url, Object param, Type clazz, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException;
+    <T> AsyncFuture<T> getFuture(String serviceName, String uri, Object param, Type clazz, int timeOut) throws ServiceNotFoundException, ServiceNotAvailableException;
 
-    <T> T get(String serviceName, String url, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException;
+    <T> T get(String serviceName, String uri, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException;
 
     <T> T get(String serviceName, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException;
 
-    <T> T post(String serviceName, String url, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException;
+    <T> T post(String serviceName, String uri, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException;
 
     <T> T post(String serviceName, Object param, Type clazz) throws ServiceNotFoundException, ServiceNotAvailableException;
 }

@@ -1,6 +1,6 @@
 package com.iusofts.blades.monitor.web.controller;
 
-import com.iusofts.blades.monitor.service.dto.*;
+import com.iusofts.blades.monitor.inft.dto.*;
 import com.iusofts.blades.monitor.service.util.BladesUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

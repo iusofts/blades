@@ -1,9 +1,7 @@
-package com.iusofts.blades.monitor.service.dto;
+package com.iusofts.blades.monitor.inft.dto;
 
 /**
  * 关系
- *
- * @author Ivan Shen
  */
 public class Link {
 

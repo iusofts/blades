@@ -1,9 +1,7 @@
-package com.iusofts.blades.monitor.service.enums;
+package com.iusofts.blades.monitor.inft.enums;
 
 /**
  * 应用类型
- *
- * @author Ivan Shen
  */
 public enum ApplicationType {
 

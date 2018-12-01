@@ -25,7 +25,7 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
     private static final Logger logger = LoggerFactory.getLogger(HystrixCommonCommand.class);
 
     private String serviceName;
-    private String urlPath;
+    private String uri;
     private ServiceFinder serviceFinder;
     private RequestMethod methodType;
     private Object param;
@@ -34,12 +34,12 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
     private RestTemplate restTemplate;
     private EventPublisher eventPublisher;
 
-    public HystrixCommonCommand(String serviceName, String urlPath, ServiceFinder serviceFinder, EventPublisher eventPublisher, RequestMethod methodType, Object param, Class<T> responseType, int timeOut, RestTemplate restTemplate) {
+    public HystrixCommonCommand(String serviceName, String uri, ServiceFinder serviceFinder, EventPublisher eventPublisher, RequestMethod methodType, Object param, Class<T> responseType, int timeOut, RestTemplate restTemplate) {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(serviceName.split("\\.")[0]))
                 .andCommandKey(HystrixCommandKey.Factory.asKey(serviceName))
                 .andCommandPropertiesDefaults(HystrixCommandProperties.Setter().withExecutionTimeoutInMilliseconds(timeOut)));
         this.serviceName = serviceName;
-        this.urlPath = urlPath;
+        this.uri = uri;
         this.serviceFinder = serviceFinder;
         this.methodType = methodType;
         this.param = param;
@@ -56,15 +56,16 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
      */
     @Override
     protected T run() throws Exception {
-        String url;
-        if (StringUtils.isNotBlank(urlPath)) {
-            url = urlPath;
-        } else {
-            // http call
-            ServiceInstanceDetail detail = serviceFinder.getService(serviceName);
-            url = this.buildUrl(detail);
-        }
+        ServiceInstanceDetail detail = null;
+        String url = "";
         try {
+            detail = serviceFinder.getService(serviceName);
+            if (StringUtils.isNotBlank(uri) && uri.indexOf("http") == 0) {
+                url = uri;
+            } else {
+                // http call
+                url = this.buildUrl(detail);
+            }
             long startTime = System.currentTimeMillis();
             T response = this.httpCall(url);
             long endTime = System.currentTimeMillis();
@@ -72,10 +73,10 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
             if (endTime - startTime > 500) {
                 logger.warn("call service : {} ,url is : {} spend {}ms, please check it");
             }
-            this.publishAccessSuccessEvent(endTime - startTime);
+            this.publishAccessSuccessEvent(endTime - startTime, detail);
             return response;
         } catch (Exception e) {
-            this.publishAccessFailedEvent(e.getMessage());
+            this.publishAccessFailedEvent(e.getMessage(), detail);
             if (e instanceof ServiceNotAvailableException
                     || e instanceof ServiceNotFoundException
                     || e instanceof ServiceNotAuthException) {
@@ -88,14 +89,14 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
 
     }
 
-    private void publishAccessFailedEvent(String errorMsg) {
+    private void publishAccessFailedEvent(String errorMsg, ServiceInstanceDetail detail) {
         if (null == eventPublisher) {
             // 未配置
             return;
         }
         try {
             // 调用失败的不统计调用耗时
-            BladesAccessEvent bladesAccessEvent = new BladesAccessEvent("bladesAccess", BladesInitial.group, 0, serviceName, false, errorMsg);
+            BladesAccessEvent bladesAccessEvent = new BladesAccessEvent("bladesAccess", BladesInitial.group, 0, serviceName, false, errorMsg, detail);
             eventPublisher.publish(bladesAccessEvent);
         } catch (Exception e) {
             // never throw exception
@@ -104,13 +105,13 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
 
     }
 
-    private void publishAccessSuccessEvent(long costTime) {
+    private void publishAccessSuccessEvent(long costTime, ServiceInstanceDetail detail) {
         if (null == eventPublisher) {
             // 未配置
             return;
         }
         try {
-            BladesAccessEvent bladesAccessEvent = new BladesAccessEvent("bladesAccess", BladesInitial.group, costTime, serviceName, true, "success");
+            BladesAccessEvent bladesAccessEvent = new BladesAccessEvent("bladesAccess", BladesInitial.group, costTime, serviceName, true, "success", detail);
             eventPublisher.publish(bladesAccessEvent);
         } catch (Exception e) {
             // never throw exception
@@ -119,7 +120,11 @@ public class HystrixCommonCommand<T> extends HystrixCommand<T> {
     }
 
     private String buildUrl(ServiceInstanceDetail detail) {
-        return "http://" + detail.getLocalIp() + ":" + detail.getLocalPort() + detail.getClassPath() + detail.getMethodPath();
+        String url = "http://" + detail.getLocalIp() + ":" + detail.getLocalPort();
+        if (StringUtils.isNotBlank(uri)) {
+            return url + uri;
+        }
+        return url + detail.getClassPath() + detail.getMethodPath();
     }
 
     // 使用RestTemplate进行http调用

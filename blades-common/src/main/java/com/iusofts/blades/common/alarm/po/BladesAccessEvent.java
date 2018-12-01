@@ -1,5 +1,7 @@
 package com.iusofts.blades.common.alarm.po;
 
+import com.iusofts.blades.common.domain.ServiceInstanceDetail;
+
 /**
  * 访问事件
  */
@@ -36,11 +38,16 @@ public class BladesAccessEvent extends CommonEvent {
     private long costTime;
 
     /**
+     * 提供者信息
+     */
+    private ServiceInstanceDetail providerDetail;
+
+    /**
      * Create a new ApplicationEvent.
      *
      * @param name the object on which the event initially occurred (never {@code null})
      */
-    public BladesAccessEvent(String name, String from, long costTime, String callService, boolean success, String callResult) {
+    public BladesAccessEvent(String name, String from, long costTime, String callService, boolean success, String callResult, ServiceInstanceDetail providerDetail) {
         super(name);
         this.from = from;
         this.to = callService.split("\\.")[0];
@@ -48,6 +55,7 @@ public class BladesAccessEvent extends CommonEvent {
         this.callService = callService;
         this.success = success;
         this.callResult = callResult;
+        this.providerDetail = providerDetail;
     }
 
     public String getFrom() {
@@ -98,4 +106,11 @@ public class BladesAccessEvent extends CommonEvent {
         this.costTime = costTime;
     }
 
+    public ServiceInstanceDetail getProviderDetail() {
+        return providerDetail;
+    }
+
+    public void setProviderDetail(ServiceInstanceDetail providerDetail) {
+        this.providerDetail = providerDetail;
+    }
 }

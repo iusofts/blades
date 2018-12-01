@@ -1,6 +1,7 @@
 package com.iusofts.blades.core.alarm;
 
 import com.iusofts.blades.common.alarm.report.BladesEventReport;
+import com.iusofts.blades.common.domain.ServiceInstanceDetail;
 import com.iusofts.blades.common.util.IPUtil;
 import com.iusofts.blades.common.util.ServiceLocator;
 import com.iusofts.blades.core.alarm.vo.MonitorRecordVo;
@@ -22,7 +23,7 @@ public class MonitorReport implements BladesEventReport {
     private ServiceCaller serviceCaller;
 
     @Override
-    public void report(String serviceName, boolean success, long costTime, Map<String, Object> extend) {
+    public void report(String serviceName, boolean success, long costTime, ServiceInstanceDetail provider, Map<String, Object> extend) {
         logger.info("monitor report serviceName:{},success:{},costTime:{}", serviceName, success, costTime);
         if (inited.compareAndSet(false, true)) {
             this.serviceCaller = (ServiceCaller) ServiceLocator.init().getService(ServiceCaller.class);
@@ -32,11 +33,17 @@ public class MonitorReport implements BladesEventReport {
             paramVo.setServiceName(serviceName);
             paramVo.setSuccess(success);
             paramVo.setCostTime(costTime);
+            // 提供者信息
+            paramVo.setProviderName(provider.getServiceGroup());
+            paramVo.setProviderIP(provider.getLocalIp());
+            paramVo.setProviderPort(provider.getLocalPort());
+            paramVo.setProviderHostName(provider.getLocalHostName());
+            // 消费者信息
             paramVo.setConsumerName(BladesInitial.group);
             paramVo.setConsumerIP(BladesInitial.ip);
             paramVo.setConsumerPort(BladesInitial.port);
-            paramVo.setHostName(BladesInitial.hostName);
-            serviceCaller.getFuture(BladesInitial.monitorServiceName, paramVo, Object.class, 1000L);
+            paramVo.setConsumerHostName(BladesInitial.hostName);
+            serviceCaller.postFuture(BladesInitial.monitorServiceName, paramVo, Object.class, 1000L);
         }
     }
 }

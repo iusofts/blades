@@ -36,7 +36,7 @@ public abstract class AbstractEventHandler<T extends CommonEvent> implements App
         if (eventReport != null) {
             if (event instanceof BladesAccessEvent) {
                 BladesAccessEvent accessEvent = (BladesAccessEvent) event;
-                eventReport.report(accessEvent.getTo(), accessEvent.isSuccess(), accessEvent.getCostTime(), null);
+                eventReport.report(accessEvent.getCallService(), accessEvent.isSuccess(), accessEvent.getCostTime(), accessEvent.getProviderDetail(), null);
             }
         }
 

@@ -1,22 +1,9 @@
-/*
- * Copyright (C) 2006-2016 AiJia All rights reserved
- * Author: Ivan Shen
- * Date: 2017/1/17
- * Description:Provider.java
- */
-package com.iusofts.blades.monitor.service.dto;
+package com.iusofts.blades.monitor.inft.dto;
 
 /**
- * 提供者
- *
- * @author Ivan Shen
+ * 消费者
  */
-public class Provider {
-
-    /**
-     * 编号
-     */
-    private String id;
+public class Consumer {
 
     /**
      * 名称
@@ -32,19 +19,6 @@ public class Provider {
      * 端口
      */
     private Integer port;
-
-    /**
-     * 禁用
-     */
-    private boolean disable;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getAppName() {
         return appName;
@@ -70,11 +44,4 @@ public class Provider {
         this.port = port;
     }
 
-    public boolean isDisable() {
-        return disable;
-    }
-
-    public void setDisable(boolean disable) {
-        this.disable = disable;
-    }
 }

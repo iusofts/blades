@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;
 
@@ -35,6 +36,13 @@ public class JsonUtils {
      */
     public static Map<String, Object> obj2map(Object obj) {
         return obj == null ? null : json2map(JSON.toJSONString(obj, mapping));
+    }
+
+    /**
+     * javaBean、list、map convert to json string
+     */
+    public static Map<String, Object> obj2map(Object obj, SerializeFilter filter) {
+        return obj == null ? null : json2map(JSON.toJSONString(obj, mapping, filter));
     }
 
     /**
