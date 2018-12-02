@@ -2,6 +2,7 @@ package com.iusofts.blades.monitor.service.dao;
 
 import com.iusofts.blades.common.influx.InfluxTemplate;
 import com.iusofts.blades.monitor.service.model.ApplicationCount;
+import com.iusofts.blades.monitor.service.model.ApplicationRelation;
 import com.iusofts.blades.monitor.service.model.MonitorRecord;
 import com.iusofts.blades.monitor.service.model.UnitCount;
 import org.apache.commons.collections.CollectionUtils;
@@ -46,7 +47,7 @@ public class MonitorRecordDao {
      */
     public List<ApplicationCount> getAllProviderAndCallCount() {
         List<ApplicationCount> applicationCountList = new ArrayList<>();
-        String sql = "select count(consumerIP) from monitor_record where time > now() - 30m  group by providerName";
+        String sql = "select count(*) from monitor_record where time > now() - 30m  group by providerName";
         QueryResult queryResult = this.influxTemplate.query(database, sql);
         if (StringUtils.isEmpty(queryResult.getError()) && CollectionUtils.isNotEmpty(queryResult.getResults())) {
             List<QueryResult.Series> seriesList = queryResult.getResults().get(0).getSeries();
@@ -70,7 +71,7 @@ public class MonitorRecordDao {
      */
     public List<UnitCount> getProviderCallCountByMinute(String providerName) {
         List<UnitCount> unitCountList = new ArrayList<>();
-        String sql = "select count(consumerIP) from monitor_record where time > now() - 30m and providerName = '" + providerName + "'  group by time(1m)  limit 30;";
+        String sql = "select count(*) from monitor_record where time > now() - 30m and providerName = '" + providerName + "'  group by time(1m)  limit 30;";
         QueryResult queryResult = this.influxTemplate.query(database, sql);
         if (StringUtils.isEmpty(queryResult.getError()) && CollectionUtils.isNotEmpty(queryResult.getResults())) {
             List<QueryResult.Series> seriesList = queryResult.getResults().get(0).getSeries();
@@ -93,6 +94,25 @@ public class MonitorRecordDao {
             }
         }
         return unitCountList;
+    }
+
+    public List<ApplicationRelation> getApplicationRelations() {
+        List<ApplicationRelation> relationList = new ArrayList<>();
+        String sql = "select count(*) from monitor_record where time > now() - 1d  group by consumerName,providerName";
+        QueryResult queryResult = this.influxTemplate.query(database, sql);
+        if (StringUtils.isEmpty(queryResult.getError()) && CollectionUtils.isNotEmpty(queryResult.getResults())) {
+            List<QueryResult.Series> seriesList = queryResult.getResults().get(0).getSeries();
+            if (CollectionUtils.isNotEmpty(seriesList)) {
+                for (QueryResult.Series series : seriesList) {
+                    ApplicationRelation relation = new ApplicationRelation();
+                    relation.setProviderName(series.getTags().get("providerName"));
+                    relation.setConsumerName(series.getTags().get("consumerName"));
+                    relation.setCount(((Double) series.getValues().get(0).get(1)).intValue());
+                    relationList.add(relation);
+                }
+            }
+        }
+        return relationList;
     }
 
 }

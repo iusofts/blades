@@ -71,9 +71,9 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 			var dialogDefinition = ev.data.definition;
 
 			// Check if the definition is from the dialog we're
-			// interested on (the "Link" dialog).
+			// interested on (the "Edge" dialog).
 			if ( dialogName == 'myDialog' && ev.editor.name == 'editor2' ) {
-				// Get a reference to the "Link Info" tab.
+				// Get a reference to the "Edge Info" tab.
 				var infoTab = dialogDefinition.getContents( 'tab1' );
 
 				// Add a new text field to the "tab1" tab page.
@@ -98,7 +98,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 				// Remove the "tab2" tab page.
 				dialogDefinition.removeContents( 'tab2' );
 
-				// Add a new tab to the "Link" dialog.
+				// Add a new tab to the "Edge" dialog.
 				dialogDefinition.addContents( {
 					id: 'customTab',
 					label: 'My Tab',

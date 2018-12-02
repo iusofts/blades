@@ -34,13 +34,13 @@ public class MonitorRecord {
     /**
      * 提供者IP
      */
-    @JSONField(label = "field")
+    @JSONField(label = "tag")
     String providerIP;
 
     /**
      * 提供者端口
      */
-    @JSONField(label = "field")
+    @JSONField(label = "tag")
     String providerPort;
 
     /**
@@ -58,13 +58,13 @@ public class MonitorRecord {
     /**
      * 消费者IP
      */
-    @JSONField(label = "field")
+    @JSONField(label = "tag")
     String consumerIP;
 
     /**
      * 消费者端口
      */
-    @JSONField(label = "field")
+    @JSONField(label = "tag")
     String consumerPort;
 
     /**

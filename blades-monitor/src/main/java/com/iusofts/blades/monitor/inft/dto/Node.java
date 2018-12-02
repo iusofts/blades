@@ -5,27 +5,31 @@ package com.iusofts.blades.monitor.inft.dto;
  */
 public class Node {
 
-    /**
-     * 类型
-     */
-    private Integer category;
 
     /**
-     * 名称
+     * icon : APP
+     * id : 1
+     * name : blades-monitor
      */
+
+    private String icon;
+    private String id;
     private String name;
 
-    /**
-     * 值
-     */
-    private Integer value;
-
-    public Integer getCategory() {
-        return category;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setCategory(Integer category) {
-        this.category = category;
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -34,13 +38,5 @@ public class Node {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
     }
 }

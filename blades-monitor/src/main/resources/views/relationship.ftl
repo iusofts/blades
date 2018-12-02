@@ -48,7 +48,7 @@
 
     function getNodeIcon(id) {
         var result = ''
-        if (id == '1') {
+        if (id == 'blades-monitor') {
             result = 'resource/plugins/d3/icon/2.png'
         }
         if (result == '') {
@@ -61,8 +61,8 @@
     $(window).ready(function () {
         //load menu
         choiceMenu("relationship");
-        $.getJSON("resource/plugins/d3/test.json", function (data, status) {
-            initGraph('1', data)
+        $.getJSON("monitor/getApplicationDependency", function (data, status) {
+            initGraph('blades-monitor', data)
         });
     });
 </script>

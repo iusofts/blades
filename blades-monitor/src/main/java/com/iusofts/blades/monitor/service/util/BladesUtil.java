@@ -427,23 +427,6 @@ public class BladesUtil {
         return serviceDataList;
     }
 
-    public static void getPraph() {
-
-        List<Link> links = new ArrayList<>();
-        for (String key : consumerMap.keySet()) {
-            for (String consumer : consumerMap.get(key)) {
-                Link link = new Link();
-                link.setTarget(key);
-                link.setSource(consumer);
-                link.setName(consumer + "调用" + key);
-                link.setWeight(1);
-                links.add(link);
-            }
-        }
-
-        System.err.println(JsonUtils.obj2json(links));
-    }
-
     // 以下注入静态属性
     @Value("${blades.zookeeper.address}")
     public void setZkAddress(String zkAddress) {

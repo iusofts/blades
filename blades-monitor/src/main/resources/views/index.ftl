@@ -181,6 +181,7 @@
         $.getJSON("monitor/getAllApplicationCount", "", function (data) {
             option.legend.data = data.appNames;
             option.xAxis[0].data = data.times;
+            var arraySeries = new Array();
             data.appNames.forEach(function (appName, index) {
                 var series = {
                     name: appName,
@@ -189,8 +190,9 @@
                     smooth: true,
                     data: data.unitCountList[index]
                 };
-                option.series[0] = series;
+                arraySeries.push(series);
             });
+            option.series = arraySeries;
             // 使用刚指定的配置项和数据显示图表。
             myChart.setOption(option);
         });

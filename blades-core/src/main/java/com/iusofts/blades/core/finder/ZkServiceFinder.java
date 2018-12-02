@@ -5,6 +5,7 @@ import com.iusofts.blades.common.domain.ServiceInstanceDetail;
 import com.iusofts.blades.common.excption.ServiceNotFoundException;
 import com.iusofts.blades.registry.ZkCuratorServiceClient;
 import com.iusofts.blades.core.finder.strategy.Strategy;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class ZkServiceFinder implements ServiceFinder {
     public ServiceInstanceDetail getService(String serviceName) throws ServiceNotFoundException {
         try {
             List<ServiceInstance<ServiceInstanceDetail>> instances =this.client.getServiceByName(serviceName);
+            if(CollectionUtils.isEmpty(instances)) throw new ServiceNotFoundException(serviceName);
             // 过滤掉已被隔离的
             List<ServiceInstance<ServiceInstanceDetail>> availableInstances = new ArrayList<>();
             for (ServiceInstance<ServiceInstanceDetail> instance : instances) {

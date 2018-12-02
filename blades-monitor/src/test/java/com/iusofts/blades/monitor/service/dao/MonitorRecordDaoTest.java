@@ -23,4 +23,9 @@ public class MonitorRecordDaoTest extends BaseTest {
         monitorRecordDao.getProviderCallCountByMinute("blades-monitor");
     }
 
+    @Test
+    public void getApplicationRelations() throws Exception {
+        monitorRecordDao.getApplicationRelations();
+    }
+
 }

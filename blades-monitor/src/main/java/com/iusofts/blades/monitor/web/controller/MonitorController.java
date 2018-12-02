@@ -2,6 +2,7 @@ package com.iusofts.blades.monitor.web.controller;
 
 import com.iusofts.blades.common.util.JsonUtils;
 import com.iusofts.blades.monitor.inft.MonitorInterface;
+import com.iusofts.blades.monitor.inft.dto.Dependency;
 import com.iusofts.blades.monitor.inft.dto.OverviewCount;
 import com.iusofts.blades.monitor.service.model.ApplicationCount;
 import com.iusofts.blades.monitor.service.model.UnitCount;
@@ -75,5 +76,10 @@ public class MonitorController {
         return countVo;
     }
 
+    @ApiOperation("调用依赖关系")
+    @RequestMapping(value = "/getApplicationDependency", method = RequestMethod.GET)
+    public Dependency getApplicationDependency() {
+        return monitorInterface.getApplicationDependency();
+    }
 
 }
