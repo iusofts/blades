@@ -53,11 +53,14 @@ public class BladesUtil {
      * 初始化数据
      */
     public static void init() {
+        serviceDataList.clear();
+        serviceDataMap.clear();
+        consumerMap.clear();
+
         JavaApiSample sample = new JavaApiSample();
         sample.createConnection(CONNECTION_STRING, SESSION_TIMEOUT);
 
         try {
-
             // 加载服务数据
             List<String> serviceFileNames = sample.redChildList(ZK_SERVICE_PATH);
             // System.err.println("serviceFileNames:" + serviceFileNames);

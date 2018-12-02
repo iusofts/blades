@@ -43,7 +43,7 @@
         } catch (e) {
         }
 
-
+        refreshCache();
         //这里用setTimeout代替ajax请求进行演示
         window.setInterval(function () {
             refreshCache();

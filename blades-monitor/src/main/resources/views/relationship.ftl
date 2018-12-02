@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>test</title>
+    <title>依赖关系</title>
 <#include 'common/css.ftl' >
     <link href="resource/plugins/d3/css/style.css" rel="stylesheet"/>
 
