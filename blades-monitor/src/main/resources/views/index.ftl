@@ -35,7 +35,7 @@
                     <!-- small box -->
                     <div class="small-box bg-aqua">
                         <div class="inner">
-                            <h3 id="status_1">-/-</h3>
+                            <h3 id="count_1">-/-</h3>
 
                             <p>服务/应用</p>
                         </div>
@@ -50,8 +50,7 @@
                     <!-- small box -->
                     <div class="small-box bg-green">
                         <div class="inner">
-                            <h3><span id="status_0">-</span>/<span id="status_3">-</span></h3>
-
+                            <h3 id="count_2">-/-</h3>
                             <p>提供者/消费者</p>
                         </div>
                         <div class="icon">
@@ -65,8 +64,7 @@
                     <!-- small box -->
                     <div class="small-box bg-red">
                         <div class="inner">
-                            <h3>-</h3>
-
+                            <h3 id="count_3">-</h3>
                             <p>错误</p>
                         </div>
                         <div class="icon">
@@ -80,8 +78,7 @@
                     <!-- small box -->
                     <div class="small-box bg-yellow">
                         <div class="inner">
-                            <h3 id="status_2">-</h3>
-
+                            <h3 id="count_4">-</h3>
                             <p>警告</p>
                         </div>
                         <div class="icon">
@@ -142,6 +139,25 @@
         //load menu
         choiceMenu("main-index");
 
+        // 初始化概况统计
+        $.getJSON("monitor/overviewCount", "", function (data) {
+            if (data.appCount && data.serviceCount) {
+                $("#count_1").html(data.serviceCount + "/" + data.appCount);
+            }
+            if (data.providerCount && data.consumerCount) {
+                $("#count_2").html(data.providerCount + "/" + data.consumerCount);
+            } else if(data.providerCount) {
+                $("#count_2").html(data.providerCount + "/-");
+            }
+            if (data.errorCount) {
+                $("#count_3").html(data.errorCount);
+            }
+            if (data.warningCount) {
+                $("#count_4").html(data.warningCount);
+            }
+        });
+
+        // 初始化应用调用量统计图
         $.getJSON("resource/plugins/echarts/data_templet.json", "", function (data) {
             option = data;
             refreshData();
@@ -154,6 +170,9 @@
     });
 
 
+    /**
+     * 刷新应用调用量
+     */
     function refreshData() {
         if (!myChart) {
             return;
@@ -162,7 +181,7 @@
         $.getJSON("monitor/getAllApplicationCount", "", function (data) {
             option.legend.data = data.appNames;
             option.xAxis[0].data = data.times;
-            data.appNames.forEach(function(appName,index){
+            data.appNames.forEach(function (appName, index) {
                 var series = {
                     name: appName,
                     type: "line",

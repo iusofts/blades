@@ -5,6 +5,7 @@ import com.iusofts.blades.common.util.JsonUtils;
 import com.iusofts.blades.common.zookeeper.JavaApiSample;
 import com.iusofts.blades.monitor.inft.dto.*;
 import com.iusofts.blades.monitor.inft.enums.ApplicationType;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -14,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -37,6 +37,7 @@ public class BladesUtil {
     private static Logger log = LoggerFactory.getLogger(BladesUtil.class);
 
     // 所有服务数据
+    private static final List<ServiceInstance<ServiceInstanceDetail>> serviceDataList = new ArrayList<>();
     private static final Map<String, Map<String, ServiceInstance<ServiceInstanceDetail>>> serviceDataMap = new HashMap<>();
     // 消费者集合
     private static final Map<String, String[]> consumerMap = new HashMap<>();
@@ -55,19 +56,16 @@ public class BladesUtil {
         JavaApiSample sample = new JavaApiSample();
         sample.createConnection(CONNECTION_STRING, SESSION_TIMEOUT);
 
-        // 加载源数据
-        List<ServiceInstance<ServiceInstanceDetail>> serviceDataList = new ArrayList<>();
-
         try {
 
             // 加载服务数据
             List<String> serviceFileNames = sample.redChildList(ZK_SERVICE_PATH);
             // System.err.println("serviceFileNames:" + serviceFileNames);
-            if (!CollectionUtils.isEmpty(serviceFileNames)) {
+            if (CollectionUtils.isNotEmpty(serviceFileNames)) {
                 for (String serviceFileName : serviceFileNames) {
                     String serviceFilePath = ZK_SERVICE_PATH + PATH_SUFFIX + serviceFileName;// 服务文件路径
                     List<String> serviceProviderFileNames = sample.redChildList(serviceFilePath);
-                    if (!CollectionUtils.isEmpty(serviceProviderFileNames)) {
+                    if (CollectionUtils.isNotEmpty(serviceProviderFileNames)) {
                         Map<String, ServiceInstance<ServiceInstanceDetail>> serviceProviderMap = new HashMap<>();
                         for (String serviceProviderFileName : serviceProviderFileNames) {
                             String serviceProviderData = sample
@@ -187,7 +185,7 @@ public class BladesUtil {
         }
 
         //FIXME 目前的消费者信息是来自于授权列表里面 待服务调用监控完善后更换消费者数据来源
-        //FIXME 不同与dubbo使用前建立长连接即可监控到消费者 hystrix只能先调用后才能监控到消费者
+        //FIXME 不同与dubbo使用前建立长连接即可监控到消费者 blades只能先调用后才能监控到消费者
         // 既是消费者也是提供者
         Set<String> consumerSet = new HashSet<>();
         for (String key : consumerMap.keySet()) {
@@ -416,6 +414,17 @@ public class BladesUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * 获取全部服务源数据
+     * @return
+     */
+    public static List<ServiceInstance<ServiceInstanceDetail>> getServiceDataList() {
+        if(CollectionUtils.isEmpty(serviceDataList)) {
+            init();
+        }
+        return serviceDataList;
     }
 
     public static void getPraph() {

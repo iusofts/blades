@@ -1,9 +1,8 @@
 package com.iusofts.blades.monitor.web.controller;
 
-import com.google.common.collect.Lists;
-
 import com.iusofts.blades.common.util.JsonUtils;
 import com.iusofts.blades.monitor.inft.MonitorInterface;
+import com.iusofts.blades.monitor.inft.dto.OverviewCount;
 import com.iusofts.blades.monitor.service.model.ApplicationCount;
 import com.iusofts.blades.monitor.service.model.UnitCount;
 import com.iusofts.blades.monitor.web.vo.ApplicationCountVo;
@@ -43,6 +42,12 @@ public class MonitorController {
         monitorInterface.monitor(recordVo);
     }
 
+    @ApiOperation("概况统计")
+    @RequestMapping(value = "/overviewCount", method = RequestMethod.GET)
+    public OverviewCount overviewCount() {
+        return monitorInterface.overviewCount();
+    }
+
     @ApiOperation("应用调用量统计")
     @RequestMapping(value = "/getAllApplicationCount", method = RequestMethod.GET)
     public ApplicationCountVo getAllApplicationCount() {
@@ -69,5 +74,6 @@ public class MonitorController {
         countVo.setUnitCountList(unitCountList);
         return countVo;
     }
+
 
 }

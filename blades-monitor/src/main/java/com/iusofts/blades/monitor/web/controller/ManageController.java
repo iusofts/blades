@@ -77,7 +77,7 @@ public class ManageController {
 	}
 
 	@ApiOperation("刷新缓存")
-	@RequestMapping(value = "/reload", method = RequestMethod.POST)
+	@RequestMapping(value = "/reload", method = RequestMethod.GET)
 	public String reload() {
 		BladesUtil.init();
 		return "success";

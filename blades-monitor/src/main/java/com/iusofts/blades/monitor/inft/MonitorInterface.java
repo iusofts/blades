@@ -1,5 +1,6 @@
 package com.iusofts.blades.monitor.inft;
 
+import com.iusofts.blades.monitor.inft.dto.OverviewCount;
 import com.iusofts.blades.monitor.service.model.ApplicationCount;
 import com.iusofts.blades.monitor.web.vo.MonitorRecordVo;
 
@@ -17,5 +18,10 @@ public interface MonitorInterface {
      * @return
      */
     List<ApplicationCount> getAllApplicationCount();
+
+    /**
+     * 概况统计
+     */
+    OverviewCount overviewCount();
 
 }
