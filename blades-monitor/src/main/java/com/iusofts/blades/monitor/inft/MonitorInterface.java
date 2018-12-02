@@ -1,6 +1,9 @@
 package com.iusofts.blades.monitor.inft;
 
+import com.iusofts.blades.monitor.service.model.ApplicationCount;
 import com.iusofts.blades.monitor.web.vo.MonitorRecordVo;
+
+import java.util.List;
 
 /**
  * 监控服务接口
@@ -8,5 +11,11 @@ import com.iusofts.blades.monitor.web.vo.MonitorRecordVo;
 public interface MonitorInterface {
 
     void monitor(MonitorRecordVo recordVo);
+
+    /**
+     * 获取一段时间内所有应用的调用量
+     * @return
+     */
+    List<ApplicationCount> getAllApplicationCount();
 
 }

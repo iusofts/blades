@@ -5,6 +5,8 @@ import com.iusofts.blades.common.util.JsonUtils;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Point;
+import org.influxdb.dto.Query;
+import org.influxdb.dto.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -36,23 +38,35 @@ public class InfluxTemplate {
 
     /**
      * 插入一条数据
+     *
      * @param database 库名
-     * @param point 数据
+     * @param point    数据
      */
     public void write(String database, Point point) {
         try {
             influxDB.write(database, "default", point);
         } catch (Exception e) {
-            // never throw exception
             logger.error("write to influxdb error", e);
         }
 
     }
 
     /**
+     * 查询数据
+     *
+     * @param database
+     * @param command
+     * @return
+     */
+    public QueryResult query(String database, String command) {
+        return influxDB.query(new Query(command, database));
+    }
+
+    /**
      * 构造一条数据
+     *
      * @param measurement 测量指标名,等同于表名
-     * @param data 数据
+     * @param data        数据
      * @return
      */
     public static Point buildPoint(String measurement, Object data) {

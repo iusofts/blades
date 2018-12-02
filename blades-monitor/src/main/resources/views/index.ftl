@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>sks-job</title>
-    <#include 'common/css.ftl' >
+<#include 'common/css.ftl' >
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <#include 'common/header.ftl'>
-    <#include 'common/menu.ftl'>
+<#include 'common/header.ftl'>
+<#include 'common/menu.ftl'>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -124,93 +124,58 @@
     </div>
     <!-- /.content-wrapper -->
 
-    <#include 'common/footer.ftl' >
+<#include 'common/footer.ftl' >
 
 </div>
 <!-- ./wrapper -->
 
 <#include 'common/js.ftl'>
-<!-- Morris.js charts -->
-<script src="resource/admin/plugins/ajax/libs/raphael/raphael-min.js"></script>
-<script src="resource/admin/plugins/morris/morris.min.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="resource/admin/dist/js/pages/dashboard.js"></script>
+<!-- 引入 ECharts 文件 -->
+<script src="resource/plugins/echarts/echarts.min.js"></script>
 
 <!-- page script -->
 <script>
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('revenue-chart'));
+    var option;
     $(function () {
         //load menu
         choiceMenu("main-index");
-        getCount(0);
-        getCount(1);
-        getCount(2);
-        getCount(3);
-        getCount(4);
-        getCount(6);
 
-        getErrorList();
+        $.getJSON("resource/plugins/echarts/data_templet.json", "", function (data) {
+            option = data;
+            refreshData();
+        });
+
+        //这里用setTimeout代替ajax请求进行演示
+        window.setInterval(function () {
+            refreshData();
+        }, 3000);
     });
 
 
-    /**
-     * 获取数量
-     */
-    function getCount(status) {
-        var param = new Object();
-        if(status!=0){
-            param.status = status;
+    function refreshData() {
+        if (!myChart) {
+            return;
         }
-        $.ajax({
-            type: "POST",
-            url: countApi,
-            cache: false, //禁用缓存
-            data: JSON.stringify(param), //传入已封装的参数
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (res) {
-                $("#status_"+status).text(res.data.count);
-            },
-            error: function () {
-                layer.msg("获取任务数失败");
-            }
+
+        $.getJSON("monitor/getAllApplicationCount", "", function (data) {
+            option.legend.data = data.appNames;
+            option.xAxis[0].data = data.times;
+            data.appNames.forEach(function(appName,index){
+                var series = {
+                    name: appName,
+                    type: "line",
+                    areaStyle: {},
+                    smooth: true,
+                    data: data.unitCountList[index]
+                };
+                option.series[0] = series;
+            });
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
         });
     }
-
-    /**
-     * 获取错误列表
-     */
-    function getErrorList() {
-        var param = {
-            "pagination": {
-                "currentPage": 1,
-                "pageSize": 5
-            },
-            "status": 4
-        };
-        $.ajax({
-            type: "POST",
-            url: jobListApi,
-            cache: false, //禁用缓存
-            data: JSON.stringify(param), //传入已封装的参数
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (res) {
-                console.log(res)
-                $("#errorList").html("");
-                res.data.dataList.forEach(function(value, index, array) {
-                    var str = '';
-                    str += '<div class="callout callout-danger">';
-                    str +=    '<p><i class="icon fa fa-times-circle"></i>　[错误]：任务ID('+value.id+') 任务名称('+value.jobName+') 任务分组('+value.jobGroup+') , 错误重试3次全部失败！<a href="#">详细</a></p>';
-                    str += '</div>';
-                    $("#errorList").append(str);
-                });
-            },
-            error: function () {
-                layer.msg("获取数据失败");
-            }
-        });
-    }
-
 </script>
 </body>
 </html>
