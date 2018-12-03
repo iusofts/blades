@@ -6,6 +6,7 @@ import com.iusofts.blades.monitor.inft.dto.Dependency;
 import com.iusofts.blades.monitor.inft.dto.Edge;
 import com.iusofts.blades.monitor.inft.dto.Node;
 import com.iusofts.blades.monitor.inft.dto.OverviewCount;
+import com.iusofts.blades.monitor.inft.enums.ApplicationCallCountType;
 import com.iusofts.blades.monitor.service.dao.MonitorRecordDao;
 import com.iusofts.blades.monitor.service.model.ApplicationCount;
 import com.iusofts.blades.monitor.service.model.ApplicationRelation;
@@ -41,10 +42,10 @@ public class MonitorService implements MonitorInterface {
     }
 
     @Override
-    public List<ApplicationCount> getAllApplicationCount() {
-        List<ApplicationCount> countList = this.monitorRecordDao.getAllProviderAndCallCount();
+    public List<ApplicationCount> getAllApplicationCount(ApplicationCallCountType type) {
+        List<ApplicationCount> countList = this.monitorRecordDao.getAllProviderAndCallCount(type.getName());
         for (ApplicationCount count : countList) {
-            count.setUnitCountList(this.monitorRecordDao.getProviderCallCountByMinute(count.getAppName()));
+            count.setUnitCountList(this.monitorRecordDao.getProviderCallCountByMinute(count.getAppName(), type.getName(), type.getGroupBy()));
         }
         return countList;
     }

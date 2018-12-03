@@ -2,6 +2,7 @@ package com.iusofts.blades.monitor.inft;
 
 import com.iusofts.blades.monitor.inft.dto.Dependency;
 import com.iusofts.blades.monitor.inft.dto.OverviewCount;
+import com.iusofts.blades.monitor.inft.enums.ApplicationCallCountType;
 import com.iusofts.blades.monitor.service.model.ApplicationCount;
 import com.iusofts.blades.monitor.web.vo.MonitorRecordVo;
 
@@ -18,7 +19,7 @@ public interface MonitorInterface {
      * 获取一段时间内所有应用的调用量
      * @return
      */
-    List<ApplicationCount> getAllApplicationCount();
+    List<ApplicationCount> getAllApplicationCount(ApplicationCallCountType type);
 
     /**
      * 概况统计

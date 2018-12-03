@@ -4,6 +4,7 @@ import com.iusofts.blades.common.util.JsonUtils;
 import com.iusofts.blades.monitor.inft.MonitorInterface;
 import com.iusofts.blades.monitor.inft.dto.Dependency;
 import com.iusofts.blades.monitor.inft.dto.OverviewCount;
+import com.iusofts.blades.monitor.inft.enums.ApplicationCallCountType;
 import com.iusofts.blades.monitor.service.model.ApplicationCount;
 import com.iusofts.blades.monitor.service.model.UnitCount;
 import com.iusofts.blades.monitor.web.vo.ApplicationCountVo;
@@ -14,10 +15,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,15 +47,15 @@ public class MonitorController {
         return monitorInterface.overviewCount();
     }
 
-    @ApiOperation("应用调用量统计")
-    @RequestMapping(value = "/getAllApplicationCount", method = RequestMethod.GET)
-    public ApplicationCountVo getAllApplicationCount() {
+    @ApiOperation(value = "应用调用量统计", notes = "type 1:现在 2:30分钟 3:24小时")
+    @RequestMapping(value = "/getAllApplicationCount/{type}", method = RequestMethod.GET)
+    public ApplicationCountVo getAllApplicationCount(@PathVariable("type") int type) {
         ApplicationCountVo countVo = new ApplicationCountVo();
         List<String> appNames = new ArrayList<>();
         List<String> times = new ArrayList<>();
         List<List<Integer>> unitCountList = new ArrayList<>();
 
-        List<ApplicationCount> countList = monitorInterface.getAllApplicationCount();
+        List<ApplicationCount> countList = monitorInterface.getAllApplicationCount(ApplicationCallCountType.get(type));
         for (ApplicationCount count : countList) {
             appNames.add(count.getAppName());
             if (CollectionUtils.isNotEmpty(count.getUnitCountList())) {

@@ -43,11 +43,12 @@ public class MonitorRecordDao {
     /**
      * 获取全部提供者和被调用量
      *
+     * @param leadTime 提前时间 如: 30m
      * @return
      */
-    public List<ApplicationCount> getAllProviderAndCallCount() {
+    public List<ApplicationCount> getAllProviderAndCallCount(String leadTime) {
         List<ApplicationCount> applicationCountList = new ArrayList<>();
-        String sql = "select count(*) from monitor_record where time > now() - 30m  group by providerName";
+        String sql = "select count(*) from monitor_record where time > now() - " + leadTime + "  group by providerName";
         QueryResult queryResult = this.influxTemplate.query(database, sql);
         if (StringUtils.isEmpty(queryResult.getError()) && CollectionUtils.isNotEmpty(queryResult.getResults())) {
             List<QueryResult.Series> seriesList = queryResult.getResults().get(0).getSeries();
@@ -69,9 +70,9 @@ public class MonitorRecordDao {
      * @param providerName
      * @return
      */
-    public List<UnitCount> getProviderCallCountByMinute(String providerName) {
+    public List<UnitCount> getProviderCallCountByMinute(String providerName, String leadTime, String groupBy) {
         List<UnitCount> unitCountList = new ArrayList<>();
-        String sql = "select count(*) from monitor_record where time > now() - 30m and providerName = '" + providerName + "'  group by time(1m)  limit 30;";
+        String sql = "select count(*) from monitor_record where time > now() - " + leadTime + " and providerName = '" + providerName + "'  group by time(" + groupBy + ")  limit 30;";
         QueryResult queryResult = this.influxTemplate.query(database, sql);
         if (StringUtils.isEmpty(queryResult.getError()) && CollectionUtils.isNotEmpty(queryResult.getResults())) {
             List<QueryResult.Series> seriesList = queryResult.getResults().get(0).getSeries();

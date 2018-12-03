@@ -94,7 +94,9 @@
             <div class="nav-tabs-custom">
                 <!-- Tabs within a box -->
                 <ul class="nav nav-tabs pull-right">
-                    <li class="active"><a href="#revenue-chart" data-toggle="tab">调用</a></li>
+                    <li><a href="#revenue-chart" onclick="changeType(3)" data-toggle="tab">24小时</a></li>
+                    <li class="active"><a href="#revenue-chart" onclick="changeType(2)" data-toggle="tab">30分钟</a></li>
+                    <li><a href="#revenue-chart" onclick="changeType(1)" data-toggle="tab">现在</a></li>
                     <li class="pull-left header"><i class="fa fa-inbox"></i> Count</li>
                 </ul>
                 <div class="tab-content no-padding">
@@ -132,9 +134,9 @@
 
 <!-- page script -->
 <script>
-    // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('revenue-chart'));
+    var myChart;
     var option;
+    var clock;
     $(function () {
         //load menu
         choiceMenu("main-index");
@@ -157,18 +159,46 @@
             }
         });
 
+        init();
+
+        clock = window.setInterval(function () {
+            refreshData();
+        }, 30000);
+    });
+
+    function init() {
+        echarts.dispose(document.getElementById('revenue-chart'));
+        // 基于准备好的dom，初始化echarts实例
+        myChart = echarts.init(document.getElementById('revenue-chart'));
         // 初始化应用调用量统计图
         $.getJSON("resource/plugins/echarts/data_templet.json", "", function (data) {
             option = data;
             refreshData();
         });
+    }
 
-        //这里用setTimeout代替ajax请求进行演示
-        window.setInterval(function () {
+    // 默认查看30分钟
+    var type = 2;
+    function changeType(type) {
+        clearInterval(clock); //清除js定时器
+        //type 1:现在 2:30分钟 3:24小时
+        this.type = type;
+        init();
+        var time = 30000;
+        switch (type) {
+            case 1 :
+                time = 3000;
+                break;
+            case 2 :
+                time = 30000;
+                break;
+            case 3 :
+                time = 60000;
+        }
+        clock = window.setInterval(function () {
             refreshData();
-        }, 3000);
-    });
-
+        }, time);
+    }
 
     /**
      * 刷新应用调用量
@@ -178,7 +208,7 @@
             return;
         }
 
-        $.getJSON("monitor/getAllApplicationCount", "", function (data) {
+        $.getJSON("monitor/getAllApplicationCount/" + type, "", function (data) {
             option.legend.data = data.appNames;
             option.xAxis[0].data = data.times;
             var arraySeries = new Array();
