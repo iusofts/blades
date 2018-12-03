@@ -43,12 +43,8 @@
         } catch (e) {
         }
 
+        // 刷新服务缓存
         refreshCache();
-        //这里用setTimeout代替ajax请求进行演示
-        window.setInterval(function () {
-            refreshCache();
-        }, 10000);
-
         function refreshCache() {
             $.get("manage/reload", function(result){
                 console.log(result)

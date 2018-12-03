@@ -37,10 +37,10 @@ public class BladesUtil {
     private static Logger log = LoggerFactory.getLogger(BladesUtil.class);
 
     // 所有服务数据
-    private static final List<ServiceInstance<ServiceInstanceDetail>> serviceDataList = new ArrayList<>();
-    private static final Map<String, Map<String, ServiceInstance<ServiceInstanceDetail>>> serviceDataMap = new HashMap<>();
+    private static List<ServiceInstance<ServiceInstanceDetail>> SERVICE_DATA_LIST = new ArrayList<>();
+    private static Map<String, Map<String, ServiceInstance<ServiceInstanceDetail>>> SERVICE_DATA_MAP = new HashMap<>();
     // 消费者集合
-    private static final Map<String, String[]> consumerMap = new HashMap<>();
+    private static Map<String, String[]> CONSUMER_MAP = new HashMap<>();
 
     private static ObjectMapper objectMapper;
 
@@ -53,9 +53,9 @@ public class BladesUtil {
      * 初始化数据
      */
     public static void init() {
-        serviceDataList.clear();
-        serviceDataMap.clear();
-        consumerMap.clear();
+        List<ServiceInstance<ServiceInstanceDetail>> serviceDataList = new ArrayList<>();
+        Map<String, Map<String, ServiceInstance<ServiceInstanceDetail>>> serviceDataMap = new HashMap<>();
+        Map<String, String[]> consumerMap = new HashMap<>();
 
         JavaApiSample sample = new JavaApiSample();
         sample.createConnection(CONNECTION_STRING, SESSION_TIMEOUT);
@@ -104,13 +104,18 @@ public class BladesUtil {
                 }
             }
 
-            log.info("Loaded zk hystrix data");
+            log.info("Loaded zk blades data");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.info("Loaded zk blades data error", e);
+        } finally {
+            sample.releaseConnection();
         }
 
-        sample.releaseConnection();
+        SERVICE_DATA_LIST = serviceDataList;
+        SERVICE_DATA_MAP = serviceDataMap;
+        CONSUMER_MAP = consumerMap;
     }
+
 
     /**
      * 获取服务列表
@@ -118,18 +123,18 @@ public class BladesUtil {
      * @return
      */
     public static List<Service> getServiceList() {
-        if (serviceDataMap.size() == 0) {
+        if (SERVICE_DATA_MAP.size() == 0) {
             init();
         }
         // 服务列表
         List<Service> serviceList = new ArrayList<>();
-        for (String key : serviceDataMap.keySet()) {
+        for (String key : SERVICE_DATA_MAP.keySet()) {
             Service service = new Service();
             service.setName(key);
-            if (serviceDataMap.get(key) != null) {
-                service.setProviderAmount(serviceDataMap.get(key).size());
-                for (String key2 : serviceDataMap.get(key).keySet()) {
-                    ServiceInstance<ServiceInstanceDetail> serviceInstance = serviceDataMap.get(key).get(key2);
+            if (SERVICE_DATA_MAP.get(key) != null) {
+                service.setProviderAmount(SERVICE_DATA_MAP.get(key).size());
+                for (String key2 : SERVICE_DATA_MAP.get(key).keySet()) {
+                    ServiceInstance<ServiceInstanceDetail> serviceInstance = SERVICE_DATA_MAP.get(key).get(key2);
                     if (serviceInstance != null) {
                         service.setGroup(serviceInstance.getPayload().getServiceGroup());
                         break;
@@ -138,8 +143,8 @@ public class BladesUtil {
             }
 
             // 订阅应用数
-            if (consumerMap.get(service.getGroup()) != null && consumerMap.get(service.getGroup()) != null) {
-                service.setConsumerAmount(consumerMap.get(service.getGroup()).length);
+            if (CONSUMER_MAP.get(service.getGroup()) != null && CONSUMER_MAP.get(service.getGroup()) != null) {
+                service.setConsumerAmount(CONSUMER_MAP.get(service.getGroup()).length);
             } else {
                 service.setConsumerAmount(0);
             }
@@ -155,7 +160,7 @@ public class BladesUtil {
      * @return
      */
     public static List<Application> getApplicationList() {
-        if (serviceDataMap.size() == 0) {
+        if (SERVICE_DATA_MAP.size() == 0) {
             init();
         }
         // 应用列表
@@ -176,7 +181,7 @@ public class BladesUtil {
         }
 
         //没有提供者的应用
-        for (String key : consumerMap.keySet()) {
+        for (String key : CONSUMER_MAP.keySet()) {
             if (!appMap.containsKey(key)) {
                 Application application = new Application(key);
                 application.setInactive(true);
@@ -191,8 +196,8 @@ public class BladesUtil {
         //FIXME 不同与dubbo使用前建立长连接即可监控到消费者 blades只能先调用后才能监控到消费者
         // 既是消费者也是提供者
         Set<String> consumerSet = new HashSet<>();
-        for (String key : consumerMap.keySet()) {
-            for (String consumerName : consumerMap.get(key)) {
+        for (String key : CONSUMER_MAP.keySet()) {
+            for (String consumerName : CONSUMER_MAP.get(key)) {
                 consumerSet.add(consumerName);
             }
         }
@@ -215,8 +220,8 @@ public class BladesUtil {
             if (application.getType() == ApplicationType.CONSUMER
                     || application.getType() == ApplicationType.PROVIDER_AND_CONSUMER) {
                 int count = 0;
-                for (String key : consumerMap.keySet()) {
-                    for (String consumerName : consumerMap.get(key)) {
+                for (String key : CONSUMER_MAP.keySet()) {
+                    for (String consumerName : CONSUMER_MAP.get(key)) {
                         if (application.getAppName().equals(consumerName)) {
                             if (appMap.get(key) != null) {
                                 count += appMap.get(key).getProvideServiceAmount();
@@ -239,10 +244,10 @@ public class BladesUtil {
      */
     public static List<Authorization> getAuthorizationList() {
         List<Authorization> authorizationList = new ArrayList<>();
-        for (String key : consumerMap.keySet()) {
+        for (String key : CONSUMER_MAP.keySet()) {
             Authorization authorization = new Authorization();
             authorization.setAppName(key);
-            authorization.setAllowAppNames(consumerMap.get(key));
+            authorization.setAllowAppNames(CONSUMER_MAP.get(key));
             authorizationList.add(authorization);
         }
         return authorizationList;
@@ -261,7 +266,7 @@ public class BladesUtil {
             String path = ZK_CONFIG_PATH + PATH_SUFFIX + authorization.getAppName() + AUTHORIZATION_SUFFIX;
             if (!sample.exist(path)) {//不存在新增
                 bool = sample.createPath(path, StringUtils.join(authorization.getAllowAppNames(), ","));
-                consumerMap.put(authorization.getAppName(), authorization.getAllowAppNames());
+                CONSUMER_MAP.put(authorization.getAppName(), authorization.getAllowAppNames());
             }
             sample.releaseConnection();
         }
@@ -281,7 +286,7 @@ public class BladesUtil {
             String path = ZK_CONFIG_PATH + PATH_SUFFIX + authorization.getAppName() + AUTHORIZATION_SUFFIX;
             if (sample.exist(path)) {// 存在修改
                 bool = sample.writeData(path, StringUtils.join(authorization.getAllowAppNames(), ","));
-                consumerMap.put(authorization.getAppName(), authorization.getAllowAppNames());
+                CONSUMER_MAP.put(authorization.getAppName(), authorization.getAllowAppNames());
             }
             sample.releaseConnection();
         }
@@ -301,7 +306,7 @@ public class BladesUtil {
             String path = ZK_CONFIG_PATH + PATH_SUFFIX + appName + AUTHORIZATION_SUFFIX;
             if (sample.exist(path)) {// 存在修改
                 sample.deleteNode(path);
-                consumerMap.remove(appName);
+                CONSUMER_MAP.remove(appName);
                 bool = true;
             }
             sample.releaseConnection();
@@ -316,7 +321,7 @@ public class BladesUtil {
      * @return
      */
     public static List<Provider> getProviderList(String serviceName) {
-        Map<String, ServiceInstance<ServiceInstanceDetail>> serviceInstanceMap = serviceDataMap.get(serviceName);
+        Map<String, ServiceInstance<ServiceInstanceDetail>> serviceInstanceMap = SERVICE_DATA_MAP.get(serviceName);
         List<Provider> providerList = new ArrayList<>();
         if (serviceInstanceMap != null) {
             for (String key : serviceInstanceMap.keySet()) {
@@ -344,7 +349,7 @@ public class BladesUtil {
     public static List<Consumer> getConsumerList(String appName) {
         List<Consumer> consumerList = new ArrayList<>();
         if (StringUtils.isNotBlank(appName)) {
-            String consumerStrs[] = consumerMap.get(appName);
+            String consumerStrs[] = CONSUMER_MAP.get(appName);
             if (consumerStrs != null) {
                 for (String consumerStr : consumerStrs) {
                     Consumer consumer = new Consumer();
@@ -399,7 +404,7 @@ public class BladesUtil {
                     sample.writeData(servidePath, objectMapper.writeValueAsString(serviceInstance));
 
                     // 刷新缓存
-                    Map<String, ServiceInstance<ServiceInstanceDetail>> serviceInstanceMap = serviceDataMap
+                    Map<String, ServiceInstance<ServiceInstanceDetail>> serviceInstanceMap = SERVICE_DATA_MAP
                             .get(serviceName);
                     if (serviceInstanceMap != null) {
                         ServiceInstance<ServiceInstanceDetail> serviceInstanceDetail = serviceInstanceMap
@@ -421,13 +426,14 @@ public class BladesUtil {
 
     /**
      * 获取全部服务源数据
+     *
      * @return
      */
     public static List<ServiceInstance<ServiceInstanceDetail>> getServiceDataList() {
-        if(CollectionUtils.isEmpty(serviceDataList)) {
+        if (CollectionUtils.isEmpty(SERVICE_DATA_LIST)) {
             init();
         }
-        return serviceDataList;
+        return SERVICE_DATA_LIST;
     }
 
     // 以下注入静态属性
