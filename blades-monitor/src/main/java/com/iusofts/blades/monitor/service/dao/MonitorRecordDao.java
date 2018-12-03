@@ -28,7 +28,8 @@ public class MonitorRecordDao {
     private final String database = "blades_monitor";
     private final String measurement = "monitor_record";
     private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss Z");//注意格式化的表达式
-    private final SimpleDateFormat minuteormat = new SimpleDateFormat("HH:mm");//注意格式化的表达式
+    private final SimpleDateFormat minuteFormat = new SimpleDateFormat("HH:mm");//注意格式化的表达式
+    private final SimpleDateFormat secondFormat = new SimpleDateFormat("mm:ss");//注意格式化的表达式
 
 
     @Autowired
@@ -84,7 +85,11 @@ public class MonitorRecordDao {
                             String dateStr = value.get(0).toString().replace("Z", " UTC");//注意是空格+UTC
                             Date date = format.parse(dateStr);
                             UnitCount unitCount = new UnitCount();
-                            unitCount.setUnit(minuteormat.format(date));
+                            if (groupBy.equals("3s")) {
+                                unitCount.setUnit(secondFormat.format(date));
+                            } else {
+                                unitCount.setUnit(minuteFormat.format(date));
+                            }
                             unitCount.setCount(((Double) value.get(1)).intValue());
                             unitCountList.add(unitCount);
                         } catch (ParseException e) {
