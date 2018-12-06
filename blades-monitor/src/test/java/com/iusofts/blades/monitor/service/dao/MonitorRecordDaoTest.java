@@ -2,8 +2,11 @@ package com.iusofts.blades.monitor.service.dao;
 
 import com.iusofts.blades.monitor.BaseTest;
 import com.iusofts.blades.monitor.inft.enums.ApplicationCallCountType;
+import com.iusofts.blades.monitor.service.model.ServiceConsumerInfo;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 public class MonitorRecordDaoTest extends BaseTest {
 
@@ -27,6 +30,11 @@ public class MonitorRecordDaoTest extends BaseTest {
     @Test
     public void getApplicationRelations() throws Exception {
         monitorRecordDao.getApplicationRelations();
+    }
+
+    @Test
+    public void getServiceConsumerInfos() {
+        monitorRecordDao.getServiceConsumerInfos();
     }
 
 }

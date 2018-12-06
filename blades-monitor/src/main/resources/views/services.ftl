@@ -96,6 +96,10 @@
                                     <th>所属应用</th>
                                     <th>提供者</th>
                                     <th>消费者</th>
+                                    <th>成功</th>
+                                    <th>失败</th>
+                                    <th>平均响应</th>
+                                    <th>最大响应</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -143,18 +147,28 @@
                 { "data": "name" },
                 { "data": "group" },
                 { "data": "providerAmount" },
-                { "data": "consumerAmount" }
+                { "data": "consumerAmount" },
+                { "data": "callCount" },
+                { "data": "failedCount" },
+                { "data": "meanCostTime" },
+                { "data": "maxCostTime" },
             ],
             "columnDefs": [
                 {
                     "render": function ( data, type, row ) {
-                        return '<a href="javascript:void(0)" onclick="showProvider(\''+ row['name'] +'\')" title="查看提供者">' + data + '</a>';
+                        if(data!=0) {
+                            return '<a href="javascript:void(0)" onclick="showProvider(\''+ row['name'] +'\')" title="查看提供者">' + data + '</a>';
+                        }
+                        return data;
                     },
                     "targets": 2
                 },
                 {
                     "render": function ( data, type, row ) {
-                        return '<a href="javascript:void(0)" onclick="showConsumer(\''+ row['group'] +'\')" title="查看消费者">' + data + '</a>';
+                        if(data!=0) {
+                            return '<a href="javascript:void(0)" onclick="showConsumer(\'' + row['name'] + '\')" title="查看消费者">' + data + '</a>';
+                        }
+                        return data;
                     },
                     "targets": 3
                 }
@@ -183,15 +197,15 @@
      * 查看消费者
      * @param appName
      */
-    function showConsumer(appName) {
+    function showConsumer(serviceName) {
         layer.open({
-            title: "应用["+appName+"]的消费者",
+            title: "服务["+serviceName+"]的消费者",
             type: 2,
             shadeClose: true,
             area: ['800px', '500px'],
             fixed: false, //不固定
             maxmin: true,
-            content: './getConsumerList?appName=' + appName
+            content: './getConsumerList?serviceName=' + serviceName
         });
     }
 

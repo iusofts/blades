@@ -34,10 +34,12 @@ public class MonitorReport implements BladesEventReport {
             paramVo.setSuccess(success);
             paramVo.setCostTime(costTime);
             // 提供者信息
-            paramVo.setProviderName(provider.getServiceGroup());
-            paramVo.setProviderIP(provider.getLocalIp());
-            paramVo.setProviderPort(provider.getLocalPort());
-            paramVo.setProviderHostName(provider.getLocalHostName());
+            if(provider!=null) {
+                paramVo.setProviderName(provider.getServiceGroup());
+                paramVo.setProviderIP(provider.getLocalIp());
+                paramVo.setProviderPort(provider.getLocalPort());
+                paramVo.setProviderHostName(provider.getLocalHostName());
+            }
             // 消费者信息
             paramVo.setConsumerName(BladesInitial.group);
             paramVo.setConsumerIP(BladesInitial.ip);

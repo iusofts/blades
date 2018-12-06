@@ -11,7 +11,6 @@ import com.iusofts.blades.monitor.service.dao.MonitorRecordDao;
 import com.iusofts.blades.monitor.service.model.ApplicationCount;
 import com.iusofts.blades.monitor.service.model.ApplicationRelation;
 import com.iusofts.blades.monitor.service.model.MonitorRecord;
-import com.iusofts.blades.monitor.service.util.BladesUtil;
 import com.iusofts.blades.monitor.web.vo.MonitorRecordVo;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.springframework.beans.BeanUtils;
@@ -31,6 +30,8 @@ public class MonitorService implements MonitorInterface {
 
     @Autowired
     private MonitorRecordDao monitorRecordDao;
+    @Autowired
+    private ManageService manageService;
 
     @Override
     public void monitor(MonitorRecordVo recordVo) {
@@ -53,11 +54,11 @@ public class MonitorService implements MonitorInterface {
     @Override
     public OverviewCount overviewCount() {
         OverviewCount count = new OverviewCount();
-        count.setServiceCount(BladesUtil.getServiceList().size());
-        count.setAppCount(BladesUtil.getApplicationList().size());
+        count.setServiceCount(manageService.getServiceList().size());
+        count.setAppCount(manageService.getApplicationList().size());
 
         Set<String> providerSet = new HashSet<>();
-        for (ServiceInstance<ServiceInstanceDetail> instance : BladesUtil.getServiceDataList()) {
+        for (ServiceInstance<ServiceInstanceDetail> instance : manageService.getServiceDataList()) {
             providerSet.add(instance.getAddress() + ":" + instance.getPort());
         }
         count.setProviderCount(providerSet.size());

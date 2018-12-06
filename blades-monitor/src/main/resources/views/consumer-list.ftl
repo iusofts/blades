@@ -24,6 +24,7 @@
                             <th>应用名称</th>
                             <th>地址</th>
                             <th>端口</th>
+                            <th>调用量</th>
                         </tr>
                         </thead>
                         <tbody></tbody>
@@ -49,14 +50,15 @@
 
         $('#example').DataTable({
             "ajax": {
-                "url": "manage/getConsumerList?appName=${appName}",
+                "url": "manage/getConsumerList?serviceName=${serviceName}",
                 "type": "POST",
                 "dataSrc": ''
             },
             "columns": [
-                {"data": "appName"},
-                {"data": "address"},
-                {"data": "port"},
+                {"data": "consumerName"},
+                {"data": "consumerIP"},
+                {"data": "consumerPort"},
+                {"data": "count"}
             ]
         });
 

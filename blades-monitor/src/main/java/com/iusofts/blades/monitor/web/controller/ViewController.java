@@ -49,9 +49,9 @@ public class ViewController {
 
     @ApiOperation("服务消费者")
     @RequestMapping("/getConsumerList")
-    public ModelAndView getConsumerList(@RequestParam String appName) {
+    public ModelAndView getConsumerList(@RequestParam String serviceName) {
         ModelAndView mv = new ModelAndView("/consumer-list");
-        mv.addObject("appName", appName);
+        mv.addObject("serviceName", serviceName);
         return mv;
     }
 
