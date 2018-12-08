@@ -551,7 +551,11 @@ function getLineColor(d) {
 //根据节点类型获取展示相关图片
 function getNodeImage(node) {
 	var imgUrl = getContextPath();
-	imgUrl += "resource/plugins/d3/icon/1.png";
+	if(node.icon == 'Service') {
+        imgUrl += "resource/plugins/d3/icon/4.png";
+	} else {
+        imgUrl += "resource/plugins/d3/icon/1.png";
+	}
 	setTimeout(function () {
 		getNodeIcon(node.id);
 	}, 200);

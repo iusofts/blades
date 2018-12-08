@@ -33,6 +33,12 @@ public class ViewController {
         return "/relationship";
     }
 
+    @ApiOperation("调用关系")
+    @RequestMapping("/servicesRelationship")
+    public String servicesRelationship() {
+        return "/services-relationship";
+    }
+
     @ApiOperation("授权列表")
     @RequestMapping("/authorizations")
     public String authorizations() {

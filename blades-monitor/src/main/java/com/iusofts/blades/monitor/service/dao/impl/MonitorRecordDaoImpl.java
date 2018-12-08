@@ -122,6 +122,27 @@ public class MonitorRecordDaoImpl implements MonitorRecordDao {
     }
 
     @Override
+    public List<ApplicationServiceRelation> getApplicationServiceRelations() {
+        List<ApplicationServiceRelation> relationList = new ArrayList<>();
+        String sql = "select count(*) from monitor_record where time > now() - 1d  group by serviceName,consumerName,providerName";
+        QueryResult queryResult = this.influxTemplate.query(database, sql);
+        if (StringUtils.isEmpty(queryResult.getError()) && CollectionUtils.isNotEmpty(queryResult.getResults())) {
+            List<QueryResult.Series> seriesList = queryResult.getResults().get(0).getSeries();
+            if (CollectionUtils.isNotEmpty(seriesList)) {
+                for (QueryResult.Series series : seriesList) {
+                    ApplicationServiceRelation relation = new ApplicationServiceRelation();
+                    relation.setProviderName(series.getTags().get("providerName"));
+                    relation.setConsumerName(series.getTags().get("consumerName"));
+                    relation.setServiceName(series.getTags().get("serviceName"));
+                    relation.setCount(((Double) series.getValues().get(0).get(1)).intValue());
+                    relationList.add(relation);
+                }
+            }
+        }
+        return relationList;
+    }
+
+    @Override
     public List<ServiceConsumerInfo> getServiceConsumerInfos() {
         List<ServiceConsumerInfo> serviceConsumerInfos = new ArrayList<>();
         String sql = "select count(*) from monitor_record where time > now() - 1d  group by serviceName,consumerName,consumerIP,consumerPort;";

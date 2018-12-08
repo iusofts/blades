@@ -41,6 +41,13 @@ public interface MonitorRecordDao {
     List<ApplicationRelation> getApplicationRelations();
 
     /**
+     * 获取应用服务依赖关系
+     *
+     * @return
+     */
+    List<ApplicationServiceRelation> getApplicationServiceRelations();
+
+    /**
      * 获取服务消费者信息
      */
     List<ServiceConsumerInfo> getServiceConsumerInfos();

@@ -80,4 +80,10 @@ public class MonitorController {
         return monitorInterface.getApplicationDependency();
     }
 
+    @ApiOperation("调用服务依赖关系")
+    @RequestMapping(value = "/getApplicationServiceDependency", method = RequestMethod.GET)
+    public Dependency getApplicationServiceDependency() {
+        return monitorInterface.getApplicationServiceDependency();
+    }
+
 }

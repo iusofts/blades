@@ -32,4 +32,10 @@ public interface MonitorInterface {
      */
     Dependency getApplicationDependency();
 
+    /**
+     * 获取应用服务依赖关系
+     * @return
+     */
+    Dependency getApplicationServiceDependency();
+
 }
