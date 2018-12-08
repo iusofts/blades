@@ -45,6 +45,7 @@
                                     <th>发布服务数</th>
                                     <th>订阅服务数</th>
                                     <th>状态</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -94,10 +95,53 @@
                 { "data": "provideServiceAmount" },
                 { "data": "consumeServiceAmount" },
                 { "data": "inactive" }
+            ],
+            "columnDefs": [
+                {
+                    "render": function (data, type, row) {
+                        if (data == "PROVIDER_AND_CONSUMER") {
+                            return '<font color="#006400">提供者</font>、<font color="#008b8b">消费者</font>';
+                        } else if (data == "PROVIDER") {
+                            return '<font color="#006400">提供者</font>';
+                        } else {
+                            return '<font color="#008b8b">消费者</font>';
+                        }
+                    },
+                    "targets": 1
+                },
+                {
+                    "render": function ( data, type, row ) {
+                        return '<font color="#006400">正常</font>';
+                    },
+                    "targets": 4
+                },
+                {
+                    "render": function ( data, type, row ) {
+                        return '<a href="javascript:void(0)" onclick="showConfig(\'' + row['appName'] + '\')" title="配置">配置</a>';
+                    },
+                    "targets": 5
+                }
             ]
         } );
 
     });
+
+
+    /**
+     * 查看应用配置
+     * @param appName
+     */
+    function showConfig(appName) {
+        layer.open({
+            title: "应用["+appName+"]的配置",
+            type: 2,
+            shadeClose: true,
+            area: ['800px', '600px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: './applicationConfig?appName=' + appName
+        });
+    }
 
 </script>
 </body>

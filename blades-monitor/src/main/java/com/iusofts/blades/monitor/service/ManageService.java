@@ -6,6 +6,7 @@ import com.iusofts.blades.monitor.inft.ManageInterface;
 import com.iusofts.blades.monitor.inft.dto.*;
 import com.iusofts.blades.monitor.inft.enums.ApplicationType;
 import com.iusofts.blades.monitor.service.dao.MonitorRecordDao;
+import com.iusofts.blades.monitor.service.model.ApplicationServiceRelation;
 import com.iusofts.blades.monitor.service.model.ServiceCallInfo;
 import com.iusofts.blades.monitor.service.model.ServiceConsumerInfo;
 import org.apache.commons.collections.CollectionUtils;
@@ -39,6 +40,7 @@ public class ManageService extends AbstractManage implements ManageInterface {
     public void init() {
         loadServiceAndAuthData();
         loadServiceCallerInfo();
+        getServiceList();
     }
 
     /**
@@ -53,6 +55,7 @@ public class ManageService extends AbstractManage implements ManageInterface {
         }
         // 服务列表
         List<ServiceInfo> serviceList = new ArrayList<>();
+        serviceInfoMap = new HashMap<>();
         for (String key : serviceDataMap.keySet()) {
             ServiceInfo service = new ServiceInfo();
             service.setName(key);
@@ -84,13 +87,14 @@ public class ManageService extends AbstractManage implements ManageInterface {
             }
 
             // 调用失败数量
-            if(serviceFailedCallCountMap.containsKey(service.getName())) {
+            if (serviceFailedCallCountMap.containsKey(service.getName())) {
                 service.setFailedCount(serviceFailedCallCountMap.get(service.getName()));
             } else {
                 service.setFailedCount(0);
             }
 
             serviceList.add(service);
+            serviceInfoMap.put(service.getName(), service);
         }
         return serviceList;
     }
@@ -122,27 +126,18 @@ public class ManageService extends AbstractManage implements ManageInterface {
             }
         }
 
-        //没有提供者的应用
-        for (String key : applicationAuthorizationMap.keySet()) {
-            if (!appMap.containsKey(key)) {
-                Application application = new Application(key);
-                application.setInactive(true);
-                application.setType(ApplicationType.PROVIDER);
-                application.setProvideServiceAmount(0);
-                application.setConsumeServiceAmount(0);
-                applicationList.add(application);
-            }
-        }
-
         //FIXME 目前的消费者信息是来自于授权列表里面 待服务调用监控完善后更换消费者数据来源
         //FIXME 不同与dubbo使用前建立长连接即可监控到消费者 blades只能先调用后才能监控到消费者
         // 既是消费者也是提供者
         Set<String> consumerSet = new HashSet<>();
-        for (String key : applicationAuthorizationMap.keySet()) {
-            for (String consumerName : applicationAuthorizationMap.get(key)) {
-                consumerSet.add(consumerName);
+        for (ServiceInfo serviceInfo : serviceInfoMap.values()) {
+            if(CollectionUtils.isNotEmpty(serviceInfo.getConsumerList())) {
+                for (ServiceConsumerInfo consumerInfo : serviceInfo.getConsumerList()) {
+                    consumerSet.add(consumerInfo.getConsumerName());
+                }
             }
         }
+
         for (Application application : applicationList) {
             if (consumerSet.contains(application.getAppName())) {
                 application.setType(ApplicationType.PROVIDER_AND_CONSUMER);
@@ -157,19 +152,15 @@ public class ManageService extends AbstractManage implements ManageInterface {
             applicationList.add(application);
         }
 
-        // 计算应用可消费服务数
+        // 计算应用调用服务数
+        List<ApplicationServiceRelation> serviceRelationList = this.monitorRecordDao.getApplicationServiceRelations();
         for (Application application : applicationList) {
             if (application.getType() == ApplicationType.CONSUMER
                     || application.getType() == ApplicationType.PROVIDER_AND_CONSUMER) {
                 int count = 0;
-                for (String key : applicationAuthorizationMap.keySet()) {
-                    for (String consumerName : applicationAuthorizationMap.get(key)) {
-                        if (application.getAppName().equals(consumerName)) {
-                            if (appMap.get(key) != null) {
-                                count += appMap.get(key).getProvideServiceAmount();
-                            }
-                            break;
-                        }
+                for (ApplicationServiceRelation relation : serviceRelationList) {
+                    if (application.getAppName().equals(relation.getConsumerName())) {
+                        count++;
                     }
                 }
                 application.setConsumeServiceAmount(count);

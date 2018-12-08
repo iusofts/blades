@@ -73,4 +73,12 @@ public class ViewController {
         return "/edit-authorization";
     }
 
+    @ApiOperation("应用配置")
+    @RequestMapping("/applicationConfig")
+    public ModelAndView applicationConfig(@RequestParam String appName) {
+        ModelAndView mv = new ModelAndView("/application-config");
+        mv.addObject("appName", appName);
+        return mv;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.iusofts.blades.monitor.service;
 
 import com.iusofts.blades.common.domain.ServiceInstanceDetail;
+import com.iusofts.blades.monitor.inft.dto.ServiceInfo;
 import com.iusofts.blades.monitor.service.model.ServiceCallInfo;
 import com.iusofts.blades.monitor.service.model.ServiceConsumerInfo;
 import org.apache.curator.x.discovery.ServiceInstance;
@@ -35,6 +36,7 @@ public class AbstractManage {
     // 所有服务数据
     protected List<ServiceInstance<ServiceInstanceDetail>> serviceDataList = new ArrayList<>();
     protected Map<String, Map<String, ServiceInstance<ServiceInstanceDetail>>> serviceDataMap = new HashMap<>();
+    protected Map<String, ServiceInfo> serviceInfoMap = new HashMap<>();
     // 服务消费者信息
     protected Map<String,List<ServiceConsumerInfo>> serviceConsumerInfoMap = new HashMap<>();
     // 获取服务调用情况

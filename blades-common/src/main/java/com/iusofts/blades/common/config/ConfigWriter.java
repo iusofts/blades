@@ -50,7 +50,6 @@ public class ConfigWriter implements InitializingBean,DisposableBean {
     private void registerToZookeeper() {
         try {
             Resource resource = new ClassPathResource(configFile);
-            System.out.println(1);
             if (! resource.exists()) {
                 logger.error("can't find resource {} in path",configFile);
                 return;
