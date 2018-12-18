@@ -51,6 +51,9 @@
         if (id == 'blades-monitor') {
             result = 'resource/plugins/d3/icon/2.png'
         }
+        if (id == 'blades-job') {
+            result = 'resource/plugins/d3/icon/5.png'
+        }
         if (result == '') {
             return;
         }
@@ -62,7 +65,7 @@
         //load menu
         choiceMenu("services-relationship");
         $.getJSON("monitor/getApplicationServiceDependency", function (data, status) {
-            initGraph('blades-monitor', data)
+            initGraph('blades-monitor,blades-job', data)
         });
     });
 </script>
