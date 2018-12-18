@@ -5,7 +5,9 @@
 spring:
   profiles:
     active: @profile@
-
+  output:
+    ansi:
+      enabled: ALWAYS
 logging:
   level:
     ROOT: INFO
