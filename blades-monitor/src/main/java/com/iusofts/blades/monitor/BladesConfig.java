@@ -2,13 +2,11 @@ package com.iusofts.blades.monitor;
 
 import com.iusofts.blades.core.BladesDefaultConfig;
 import com.iusofts.blades.monitor.web.controller.ManageController;
-import com.iusofts.blades.monitor.web.controller.ViewController;
 import com.iusofts.blades.registry.BladesRegister;
 import com.iusofts.blades.registry.initial.BladesInitial;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.web.BasicErrorController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -40,7 +38,6 @@ public class BladesConfig {
         bladesInitial.setRegister(bladesRegister);
         // 过滤掉不想暴露出去的控制器
         bladesInitial.addExcludeClass(ApiResourceController.class, Swagger2Controller.class);
-        bladesInitial.addExcludeClass(BasicErrorController.class, ViewController.class);
         bladesInitial.addExcludeClass(ManageController.class);
         return bladesInitial;
     }

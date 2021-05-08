@@ -10,10 +10,11 @@ spring:
       enabled: ALWAYS
 logging:
   level:
-    ROOT: INFO
+    com.iusofts.blades: debug
 
 server:
-  contextPath: /blades-monitor
+  servlet:
+    context-path: /blades-monitor
   port: 8081
 
 
