@@ -21,6 +21,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,54 +58,64 @@ public class BladesInitial implements ApplicationContextAware, InitializingBean 
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         final String localIp = this.getLocalHost()[0];
         final String localHostName = this.getLocalHost()[1];
         final String localPort = port;
         ip = localIp;
         hostName = localHostName;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (Object service : bladesServices.values()) {
+        new Thread(() -> {
+            for (Object service : bladesServices.values()) {
 
-                    RequestMapping requestMapping = AnnotationUtils.findAnnotation(service.getClass(), RequestMapping.class);
-                    BladesService bladesServiceClass = AnnotationUtils.findAnnotation(service.getClass(), BladesService.class);
+                RequestMapping requestMapping = AnnotationUtils.findAnnotation(service.getClass(), RequestMapping.class);
+                BladesService bladesServiceClass = AnnotationUtils.findAnnotation(service.getClass(), BladesService.class);
 
-                    String path = getPath(requestMapping);
-                    String classPath = "";
-                    if (StringUtils.isNotEmpty(group)) {
-                        classPath = "/" + group + path;
-                    }
-                    Method[] methods = ReflectionUtils.getAllDeclaredMethods(service.getClass());
-
-                    for (Method method : methods) {
-                        RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
-                        if (null != methodRequestMapping) {
-                            String serviceName, serviceGroup;
-                            // 优先获取注解中的服务名和分组
-                            BladesService bladesServiceMethod = AnnotationUtils.findAnnotation(method, BladesService.class);
-
-                            serviceGroup = getServiceGroup(bladesServiceMethod, "");
-                            if (StringUtils.isEmpty(serviceGroup)) {
-                                serviceGroup = getServiceGroup(bladesServiceClass, group);
-                            }
-
-                            String methodPath = getPath(methodRequestMapping);
-                            if (bladesServiceMethod == null) {
-                                serviceName = (path + methodPath).replace("/", ".");
-                                if (serviceName.indexOf(".") == 0) {
-                                    serviceName = serviceName.substring(1);
-                                }
-                            } else {
-                                serviceName = getServiceName(bladesServiceMethod, "");
-                            }
-
-                            register.registerService(localHostName, localIp, localPort, classPath, methodPath, serviceName, serviceGroup);
-                        }
-                    }
-                    logger.info("Register all service for controller:{} success", service);
+                String path = "";
+                if (requestMapping != null) {
+                    path = getPath(requestMapping);
                 }
+                String classPath = "";
+                if (StringUtils.isNotEmpty(group)) {
+                    classPath = "/" + group + path;
+                }
+                Method[] methods = ReflectionUtils.getAllDeclaredMethods(service.getClass());
+
+                for (Method method : methods) {
+                    RequestMapping methodRequestMapping = method.getAnnotation(RequestMapping.class);
+                    PostMapping methodPostMapping = method.getAnnotation(PostMapping.class);
+                    GetMapping methodGetMapping = method.getAnnotation(GetMapping.class);
+                    String methodPath;
+                    if (methodRequestMapping != null) {
+                        methodPath = getPath(methodRequestMapping);
+                    } else if (methodPostMapping != null) {
+                        methodPath = getPostPath(methodPostMapping);
+                    } else if (methodGetMapping != null) {
+                        methodPath = getGetPath(methodGetMapping);
+                    } else {
+                        continue;
+                    }
+
+                    String serviceName, serviceGroup;
+                    // 优先获取注解中的服务名和分组
+                    BladesService bladesServiceMethod = AnnotationUtils.findAnnotation(method, BladesService.class);
+
+                    serviceGroup = getServiceGroup(bladesServiceMethod, "");
+                    if (StringUtils.isEmpty(serviceGroup)) {
+                        serviceGroup = getServiceGroup(bladesServiceClass, group);
+                    }
+
+                    if (bladesServiceMethod == null) {
+                        serviceName = (path + methodPath).replace("/", ".");
+                        if (serviceName.indexOf(".") == 0) {
+                            serviceName = serviceName.substring(1);
+                        }
+                    } else {
+                        serviceName = getServiceName(bladesServiceMethod, "");
+                    }
+
+                    register.registerService(localHostName, localIp, localPort, classPath, methodPath, serviceName, serviceGroup);
+                }
+                logger.info("Register all service for controller:{} success", service);
             }
         }).start();
     }
@@ -151,16 +163,24 @@ public class BladesInitial implements ApplicationContextAware, InitializingBean 
     }
 
     private static final String getPath(RequestMapping requestMapping) {
-        if (requestMapping == null) {
-            return "";
+        return getMappingPath(requestMapping.path(), requestMapping.value());
+    }
+
+    private static final String getPostPath(PostMapping requestMapping) {
+        return getMappingPath(requestMapping.path(), requestMapping.value());
+    }
+
+    private static final String getGetPath(GetMapping requestMapping) {
+        return getMappingPath(requestMapping.path(), requestMapping.value());
+    }
+
+    private static String getMappingPath(String[] path2, String[] value2) {
+        String[] path = path2;
+        if (ArrayUtils.isNotEmpty(path)) {
+            return path[0];
         } else {
-            String[] path = requestMapping.path();
-            if (ArrayUtils.isNotEmpty(path)) {
-                return path[0];
-            } else {
-                String[] value = requestMapping.value();
-                return ArrayUtils.isNotEmpty(value) ? value[0] : null;
-            }
+            String[] value = value2;
+            return ArrayUtils.isNotEmpty(value) ? value[0] : null;
         }
     }
 

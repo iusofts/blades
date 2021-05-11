@@ -16,7 +16,7 @@
         <ul class="sidebar-menu">
             <li class="header">Blades Admin</li>
             <li id="menu-1" code="main-index">
-                <a href="index.html">
+                <a href="index">
                     <i class="fa fa-dashboard"></i> <span>首页</span></i>
                 </a>
             </li>
